@@ -1,0 +1,7 @@
+FROM python:3.10.4-slim-buster
+# Setup PIP and Ansible
+RUN pip install pip --upgrade
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+RUN pip freeze > requirements.txt
+RUN cat requirements.txt

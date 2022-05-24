@@ -1,0 +1,7 @@
+---
+- hosts: servers
+  remote_user: "{{ username }}"
+  tasks:
+    - name: Print all available facts
+      ansible.builtin.debug:
+        var: ansible_facts

@@ -1,0 +1,138 @@
+---
+- hosts: desktops
+  remote_user: "{{ username }}"
+  vars:
+    nvm_version: 0.39.1
+  tasks:
+    - name: Remove dependencies
+      become: yes
+      apt:
+        name:
+          - brltty
+        state: absent
+        purge: yes
+    - name: Create Impish-security.list file - Fix for OpenFortiGUI
+      become: yes
+      copy:
+        dest: /etc/apt/sources.list.d/impish-security.list 
+        content: deb http://security.ubuntu.com/ubuntu impish-security main
+    - name: Update and upgrade apt packages
+      become: yes
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400
+    - name: Create update shell command file
+      copy:
+        dest: /home/{{ username }}/update.sh
+        content: |
+          #!/bin/bash
+          apt update -y && apt-get update -y && apt-get upgrade -y && apt dist-upgrade -y && apt-get autoremove -y && apt-get clean -y && apt-get autoclean -y && apt purge -y
+        mode: a+x
+    - name: Run update shell command
+      become: yes
+      script: /bin/bash /home/{{ username }}/update.sh
+    - name: Install OpenFortiGUI
+      become: yes
+      apt:
+        deb: https://apt.iteas.at/iteas/pool/main/o/openfortigui/openfortigui_0.9.5-1_amd64_focal.deb
+    - name: Install Google Chrome
+      become: yes
+      apt:
+        deb: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    - name: Install software
+      become: yes
+      apt:
+        name:
+          - build-essential
+          - curl
+          - dkms
+          - docker.io
+          - git
+          - linux-headers-{{ ansible_facts['kernel'] }}
+          - openssh-server
+          - wireguard
+        state: latest
+    - name: Enable Docker service
+      become: yes
+      ansible.builtin.systemd:
+        name: docker
+        enabled: yes
+    - name: Start Docker service
+      become: yes
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+    - name: Create docker service directory
+      become: yes
+      file:
+        path: /etc/systemd/system/docker.service.d
+        state: directory
+    - name: Setup API Docker
+      become: yes
+      copy:
+        dest: /etc/systemd/system/docker.service.d/startup_options.conf
+        content: |
+          [Service]
+          ExecStart=
+          ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375
+    - name: Reload and restart Docker Daemons
+      become: yes
+      ansible.builtin.systemd:
+        name: docker
+        state: restarted
+        daemon_reload: yes
+    - name: Download Docker Compose container
+      become: yes
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.29.2/run.sh
+        dest: /usr/local/bin/docker-compose
+    - name: Assign permissions to Docker Compose container
+      become: yes
+      file: dest=/usr/local/bin/docker-compose mode=+x
+    - name: Add current user to docker group
+      become: yes
+      user:
+        name: "{{ username }}"
+        groups: docker
+        append: yes
+    - name: Setup Visual Studio Code via Snap
+      become: yes
+      community.general.snap:
+        name: code
+        classic: yes
+    - name: Setup PHPStorm via Snap
+      become: yes
+      community.general.snap:
+        name: phpstorm
+        classic: yes
+    - name: Setup Postman via Snap
+      become: yes
+      community.general.snap:
+        name: postman
+    - name: Setup Filezilla via Snap
+      become: yes
+      community.general.snap:
+        name: filezilla
+        channel: beta
+    - name: Setup MySQLWorkBench via Snap
+      become: yes
+      community.general.snap:
+        name: mysql-workbench-community
+    - name: Add Symlink for wireguard
+      become: yes
+      file:
+        src: /home/{{ username }}/wireguard/wg0.conf
+        dest: /etc/wireguard/wg0.conf
+        state: link
+    - name: Download NVM shell file
+      get_url:
+        url: https://raw.githubusercontent.com/nvm-sh/nvm/v{{ nvm_version }}/install.sh
+        dest: /home/{{ username }}/nvm.sh
+        mode: a+x
+    - name: Run NVM shell command
+      script: /bin/bash /home/{{ username }}/nvm.sh
+    - name: Remove NVM shell
+      file:
+        path: /home/{{ username }}/nvm.sh
+        state: absent

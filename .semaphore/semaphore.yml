@@ -1,0 +1,37 @@
+version: v1.0
+
+name: Build and test Pipeline
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
+
+global_job_config:
+
+  env_vars:
+    - name: DOCKER_USERNAME
+      value: sineverba
+    - name: DOCKER_IMAGE
+      value: ansible
+
+blocks:
+  - name: 'Build and test'
+    skip:
+      when: "tag =~ '.*'"
+    task:
+      jobs:
+        - name: 'Build and test'
+          commands:
+            - checkout
+            - docker build --tag $DOCKER_USERNAME/$DOCKER_IMAGE .
+            - docker run --rm -it --entrypoint cat --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE /etc/os-release | grep "Debian GNU/Linux 10 (buster)"
+            - docker run --rm -it --entrypoint python --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE --version | grep "Python 3.10.4"
+            - docker run --rm -it --entrypoint pip3 --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE --version | grep "pip 22.1.1"
+            - docker run --rm -it --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE | grep "core 2.12.6"
+            - docker run --rm -it --entrypoint ssh --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE -V | grep "8.9"
+
+promotions:
+  - name: Deploy
+    pipeline_file: build-deploy.yml
+    auto_promote:
+      when: "result = 'passed' and tag =~ '.*'"

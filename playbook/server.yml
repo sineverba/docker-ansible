@@ -1,0 +1,78 @@
+---
+- hosts: servers
+  remote_user: "{{ username }}"
+  tasks:
+    - name: Remove content of auto-update
+      become: yes
+      lineinfile:
+        path: /etc/apt/apt.conf.d/20auto-upgrades
+        regexp: '(^APT.*)'
+        state: absent
+        backup: yes
+    - name: Disable auto update
+      become: yes
+      blockinfile:
+        path: /etc/apt/apt.conf.d/20auto-upgrades
+        block: |
+          APT::Periodic::Update-Package-Lists "0";
+          APT::Periodic::Download-Upgradeable-Packages "0";
+          APT::Periodic::AutocleanInterval "0";
+          APT::Periodic::Unattended-Upgrade "0";
+    - name: Remove dependencies
+      apt:
+        name:
+          - brltty
+        state: absent
+        purge: yes
+    - name: Update and upgrade apt packages
+      become: yes
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400
+    - name: Create update shell command file
+      copy:
+        dest: /home/{{ username }}/update.sh
+        content: |
+          #!/bin/bash
+          apt update -y && apt-get update -y && apt-get upgrade -y && apt dist-upgrade -y && apt-get autoremove -y && apt-get clean -y && apt-get autoclean -y && apt purge -y
+        mode: a+x
+    - name: Run update shell command
+      become: yes
+      script: /bin/bash /home/{{ username }}/update.sh
+    - name: Install dependencies
+      become: yes
+      apt:
+        name:
+          - build-essential
+          - curl
+          - dkms
+          - docker.io
+          - git
+          - linux-headers-{{ ansible_facts['kernel'] }}
+          - openssh-server
+        state: latest
+    - name: Enable Docker service
+      become: yes
+      ansible.builtin.systemd:
+        name: docker
+        enabled: yes
+    - name: Start Docker service
+      become: yes
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+    - name: Download Docker Compose container
+      become: yes
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.29.2/run.sh
+        dest: /usr/local/bin/docker-compose
+    - name: Assign permissions to Docker Compose container
+      become: yes
+      file: dest=/usr/local/bin/docker-compose mode=+x
+    - name: Add current user to docker group
+      become: yes
+      user:
+        name: "{{ username }}"
+        groups: docker
+        append: yes
