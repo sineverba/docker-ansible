@@ -1,9 +1,12 @@
 ---
 - hosts: servers
   remote_user: "{{ username }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
   tasks:
     - name: Remove content of auto-update
       become: yes
+      ignore_errors: yes
       lineinfile:
         path: /etc/apt/apt.conf.d/20auto-upgrades
         regexp: '(^APT.*)'
@@ -11,6 +14,7 @@
         backup: yes
     - name: Disable auto update
       become: yes
+      ignore_errors: yes
       blockinfile:
         path: /etc/apt/apt.conf.d/20auto-upgrades
         block: |
