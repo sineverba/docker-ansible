@@ -5,7 +5,7 @@ Docker Ansible
 
 | CI / CD | Status |
 | ------- | ------ |
-| Semaphore | [![Build Status](https://sineverba.semaphoreci.com/badges/docker-ansible/branches/master.svg?style=shields&key=d89eb6a8-f51b-4e24-b499-ac66d6b57d95)](https://sineverba.semaphoreci.com/projects/docker-ansible) |
+| Semaphore | [![Build Status](https://sineverba.semaphoreci.com/badges/docker-ansible/branches/master.svg?style=shields&key=a831bec4-7adb-49ad-ae54-9d049cc802e9)](https://sineverba.semaphoreci.com/projects/docker-ansible) |
 
 
 ## Run
