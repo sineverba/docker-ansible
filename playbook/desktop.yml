@@ -3,6 +3,8 @@
   remote_user: "{{ username }}"
   vars:
     nvm_version: 0.39.1
+    dockercompose_version: 1.29.2
+    openfortigui_version: 0.9.5-1
   tasks:
     - name: Remove dependencies
       become: yes
@@ -11,11 +13,6 @@
           - brltty
         state: absent
         purge: yes
-    - name: Create Impish-security.list file - Fix for OpenFortiGUI
-      become: yes
-      copy:
-        dest: /etc/apt/sources.list.d/impish-security.list 
-        content: deb http://security.ubuntu.com/ubuntu impish-security main
     - name: Update and upgrade apt packages
       become: yes
       apt:
@@ -32,10 +29,14 @@
     - name: Run update shell command
       become: yes
       script: /bin/bash /home/{{ username }}/update.sh
+    - name: Install OpenFortiGUI dependency
+      become: yes
+      apt:
+        deb: http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb
     - name: Install OpenFortiGUI
       become: yes
       apt:
-        deb: https://apt.iteas.at/iteas/pool/main/o/openfortigui/openfortigui_0.9.5-1_amd64_focal.deb
+        deb: https://apt.iteas.at/iteas/pool/main/o/openfortigui/openfortigui_{{ openfortigui_version }}_amd64_focal.deb
     - name: Install Google Chrome
       become: yes
       apt:
@@ -85,7 +86,7 @@
     - name: Download Docker Compose container
       become: yes
       get_url:
-        url: https://github.com/docker/compose/releases/download/1.29.2/run.sh
+        url: https://github.com/docker/compose/releases/download/{{ dockercompose_version }}/run.sh
         dest: /usr/local/bin/docker-compose
     - name: Assign permissions to Docker Compose container
       become: yes
