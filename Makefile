@@ -1,6 +1,6 @@
 IMAGE_NAME=sineverba/ansible
 CONTAINER_NAME=ansible
-VERSION=1.0.0-dev
+VERSION=1.1.0-dev
 TOPDIR=$(PWD)
 
 build:
@@ -56,7 +56,6 @@ server:
 test:
 	docker run --rm -it --entrypoint cat --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) /etc/os-release | grep "Debian GNU/Linux 10 (buster)"
 	docker run --rm -it --entrypoint python --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) --version | grep "Python 3.10.5"
-	docker run --rm -it --entrypoint pip3 --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) --version | grep "pip 22.2"
 	docker run --rm -it --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) | grep "core 2.13.1"
 	docker run --rm -it --entrypoint ssh --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) -V | grep "9.0"
 

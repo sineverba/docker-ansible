@@ -27,7 +27,7 @@ Docker Ansible
 	-v ${pwd}/playbook:/playbook:ro \
 	-v ~/.ssh:/ssh:ro \
 	--name ansible \
-	sineverba/ansible:1.0.0 \
+	sineverba/ansible:1.1.0 \
 	# -v or -vvv or -vvvv for debug
 	-i /playbook/inventory.yml \
 	/playbook/desktop.yml \ # select your playbook

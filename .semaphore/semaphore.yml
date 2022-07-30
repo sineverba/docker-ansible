@@ -26,7 +26,6 @@ blocks:
             - docker build --tag $DOCKER_USERNAME/$DOCKER_IMAGE .
             - docker run --rm -it --entrypoint cat --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE /etc/os-release | grep "Debian GNU/Linux 10 (buster)"
             - docker run --rm -it --entrypoint python --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE --version | grep "Python 3.10.5"
-            - docker run --rm -it --entrypoint pip3 --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE --version | grep "pip 22.2"
             - docker run --rm -it --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE | grep "core 2.13.1"
             - docker run --rm -it --entrypoint ssh --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE -V | grep "9.0"
 

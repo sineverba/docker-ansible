@@ -1,4 +1,4 @@
-# Next version
+# 1.1.0
 + Upgrade dependencies
 + Add ignore_errors
 + Fix Semaphore badge
