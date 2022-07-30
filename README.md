@@ -5,7 +5,7 @@ Docker Ansible
 
 | CI / CD | Status |
 | ------- | ------ |
-| Semaphore | [![Build Status](https://sineverba.semaphoreci.com/badges/docker-ansible/branches/master.svg?style=shields&key=d89eb6a8-f51b-4e24-b499-ac66d6b57d95)](https://sineverba.semaphoreci.com/projects/docker-ansible) |
+| Semaphore | [![Build Status](https://sineverba.semaphoreci.com/badges/docker-ansible/branches/master.svg?style=shields&key=a831bec4-7adb-49ad-ae54-9d049cc802e9)](https://sineverba.semaphoreci.com/projects/docker-ansible) |
 
 
 ## Run
@@ -27,7 +27,7 @@ Docker Ansible
 	-v ${pwd}/playbook:/playbook:ro \
 	-v ~/.ssh:/ssh:ro \
 	--name ansible \
-	sineverba/ansible:1.0.0 \
+	sineverba/ansible:1.1.0 \
 	# -v or -vvv or -vvvv for debug
 	-i /playbook/inventory.yml \
 	/playbook/desktop.yml \ # select your playbook
@@ -44,5 +44,6 @@ Docker Ansible
 
 
 ### Upgrade requirements
-1. Replace `==` with `>=`
-2. Run Dockerfile.upgrade
+1. Run Dockerfile.upgrade with `$ make upgrade`
+2. Copy and paste the output of previous command inside `requirements.txt`
+3. Run `$ make build`
