@@ -49,9 +49,12 @@
           - curl
           - dkms
           - docker.io
+          - gcc
           - git
           - linux-headers-{{ ansible_facts['kernel'] }}
+          - make
           - openssh-server
+          - perl
           - wireguard
         state: latest
     - name: Enable Docker service

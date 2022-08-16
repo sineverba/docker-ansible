@@ -1,5 +1,6 @@
 # Next version
 + Upgrade dependencies
++ Add other packages for desktop setup
 
 ## 1.1.0
 + Upgrade dependencies

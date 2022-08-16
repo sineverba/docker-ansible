@@ -3,6 +3,7 @@
   remote_user: "{{ username }}"
   vars:
     ansible_python_interpreter: /usr/bin/python3
+    dockercompose_version: 1.29.2
   tasks:
     - name: Remove content of auto-update
       become: yes
@@ -69,7 +70,7 @@
     - name: Download Docker Compose container
       become: yes
       get_url:
-        url: https://github.com/docker/compose/releases/download/1.29.2/run.sh
+        url: https://github.com/docker/compose/releases/download/{{ dockercompose_version }}/run.sh
         dest: /usr/local/bin/docker-compose
     - name: Assign permissions to Docker Compose container
       become: yes
