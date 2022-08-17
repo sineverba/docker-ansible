@@ -24,11 +24,10 @@ playtest:
 	-v ~/.ssh:/ssh:ro \
 	--name $(CONTAINER_NAME) \
 	$(IMAGE_NAME):$(VERSION) \
-	-v \
 	-i /playbook/inventory.yml \
 	/playbook/test.yml \
 	-e username=user \
-
+	-e ansible_become_pass=password
 desktop:
 	docker run \
 	--rm -it \

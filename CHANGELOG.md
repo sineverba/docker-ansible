@@ -1,6 +1,7 @@
 # Next version
 + Upgrade dependencies
 + Add other packages for desktop setup
++ Add Oracle Virtualbox setup for Ubuntu desktop
 
 ## 1.1.0
 + Upgrade dependencies
