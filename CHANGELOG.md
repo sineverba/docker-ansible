@@ -1,4 +1,4 @@
-# Next version
+# 1.2.0
 + Upgrade dependencies
 + Add other packages for desktop setup
 + Add Oracle Virtualbox setup for Ubuntu desktop
