@@ -143,6 +143,7 @@
         name: mysql-workbench-community
     - name: Add Symlink for wireguard
       become: yes
+      ignore_errors: yes
       file:
         src: /home/{{ username }}/wireguard/wg0.conf
         dest: /etc/wireguard/wg0.conf

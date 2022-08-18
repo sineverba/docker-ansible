@@ -1,5 +1,6 @@
 # Next version
 + Upgrade dependencies
++ Add ignore errors
 
 ## 1.2.0
 + Upgrade dependencies
