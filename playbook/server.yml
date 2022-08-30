@@ -81,3 +81,36 @@
         name: "{{ username }}"
         groups: docker
         append: yes
+    # PiHole section. Tuning to use PiHole
+    # Can skip because they are tagged
+    - name: Replace DNS for PiHole
+      become: yes
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/resolved.conf
+        regexp: '^#DNS='
+        line: DNS=8.8.8.8
+      tags:
+        - pihole
+    - name: Replace DNSStublistener for PiHole
+      become: yes
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/resolved.conf
+        regexp: '^#DNSStubListener='
+        line: DNSStubListener=no
+      tags:
+        - pihole
+    - name: Remove symlink for PiHole
+      become: yes
+      file:
+        path: /run/systemd/resolve/resolv.conf
+        state: absent
+      tags:
+        - pihole
+    - name: Add symlink for PiHole
+      become: yes
+      file:
+        src: /etc/resolv.conf
+        dest: /run/systemd/resolve/resolv.conf
+        state: link
+      tags:
+        - pihole
