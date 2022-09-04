@@ -5,6 +5,26 @@
     ansible_python_interpreter: /usr/bin/python3
     dockercompose_version: 1.29.2
   tasks:
+    - name: Hardening SSH Server - PasswordAuthentication no
+      become: yes
+      ignore_errors: yes
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?\s*PasswordAuthentication\s'
+        line: 'PasswordAuthentication no'
+        state: present
+      tags:
+        - hardeningssh
+    - name: Hardening SSH Server - PermitRootLogin no
+      become: yes
+      ignore_errors: yes
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?\s*PermitRootLogin\s'
+        line: 'PermitRootLogin no'
+        state: present
+      tags:
+        - hardeningssh
     - name: Remove content of auto-update
       become: yes
       ignore_errors: yes
