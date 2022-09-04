@@ -1,6 +1,7 @@
 # Next version
 + Upgrade dependencies
 + Add ignore errors
++ Add PiHole section for server
 
 ## 1.2.0
 + Upgrade dependencies

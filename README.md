@@ -29,10 +29,11 @@ Docker Ansible
 	--name ansible \
 	sineverba/ansible:1.2.0 \
 	# -v or -vvv or -vvvv for debug
+	# --skip-tags "pihole" \ # Add --skip-tags to skip tags, in the form of --skip-tags "a,b,c"
 	-i /playbook/inventory.yml \
 	/playbook/desktop.yml \ # select your playbook
-	-e username=sineverba \ # select your username
-	-e ansible_become_pass=your-password! # your root passwd
+	-e username=user \ # select your username
+	-e ansible_become_pass=yourRootPasswordHere # your root passwd
     ```
 
 3. To pass the password of sudo, append `--extra-vars 'ansible_become_pass=your-password'`
