@@ -3,6 +3,7 @@
 + Add ignore errors
 + Add PiHole section for server
 + Hardening SSH server
++ Add SSH keys copy
 
 ## 1.2.0
 + Upgrade dependencies
