@@ -4,6 +4,7 @@
 + Add PiHole section for server
 + Hardening SSH server
 + Add SSH keys copy
++ Add FUSE2 if Ubuntu = 22.04
 
 ## 1.2.0
 + Upgrade dependencies
