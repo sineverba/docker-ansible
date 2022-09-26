@@ -109,6 +109,13 @@
           - linux-headers-{{ ansible_facts['kernel'] }}
           - openssh-server
         state: latest
+    - name: Install FUSE2 on Ubuntu 22.04
+      become: yes
+      when: ansible_facts['lsb']['release'] == "22.04"
+      apt:
+        name:
+          - libfuse2
+        state: latest
     - name: Enable Docker service
       become: yes
       ansible.builtin.systemd:
