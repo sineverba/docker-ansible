@@ -1,4 +1,12 @@
-# 1.2.0
+# 1.3.0
++ Upgrade dependencies
++ Add ignore errors
++ Add PiHole section for server
++ Hardening SSH server
++ Add SSH keys copy
++ Add FUSE2 if Ubuntu = 22.04
+
+## 1.2.0
 + Upgrade dependencies
 + Add other packages for desktop setup
 + Add Oracle Virtualbox setup for Ubuntu desktop

@@ -58,6 +58,13 @@
           - virtualbox-guest-x11
           - wireguard
         state: latest
+    - name: Install FUSE2 on Ubuntu 22.04
+      become: yes
+      when: ansible_facts['lsb']['release'] == "22.04"
+      apt:
+        name:
+          - libfuse2
+        state: latest
     - name: Install VirtualBox
       become: yes
       apt:
@@ -143,6 +150,7 @@
         name: mysql-workbench-community
     - name: Add Symlink for wireguard
       become: yes
+      ignore_errors: yes
       file:
         src: /home/{{ username }}/wireguard/wg0.conf
         dest: /etc/wireguard/wg0.conf

@@ -1,6 +1,6 @@
 IMAGE_NAME=sineverba/ansible
 CONTAINER_NAME=ansible
-VERSION=1.2.0-dev
+VERSION=1.3.0-dev
 TOPDIR=$(PWD)
 
 build:
@@ -9,6 +9,7 @@ build:
 upgrade:
 	sed -i 's/==/>=/' requirements.txt
 	docker build --tag $(IMAGE_NAME):$(VERSION) -f Dockerfile.upgrade .
+	docker image rm $(IMAGE_NAME):$(VERSION)
 
 inspect:
 	docker run \
@@ -54,8 +55,8 @@ server:
 
 test:
 	docker run --rm -it --entrypoint cat --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) /etc/os-release | grep "Debian GNU/Linux 10 (buster)"
-	docker run --rm -it --entrypoint python --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) --version | grep "Python 3.10.5"
-	docker run --rm -it --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) | grep "core 2.13.2"
+	docker run --rm -it --entrypoint python --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) --version | grep "Python 3.10.6"
+	docker run --rm -it --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) | grep "core 2.13.3"
 	docker run --rm -it --entrypoint ssh --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) -V | grep "9.0"
 
 

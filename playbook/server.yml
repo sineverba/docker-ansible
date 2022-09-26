@@ -5,6 +5,58 @@
     ansible_python_interpreter: /usr/bin/python3
     dockercompose_version: 1.29.2
   tasks:
+    - name: Hardening SSH Server - PasswordAuthentication no
+      become: yes
+      ignore_errors: yes
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?\s*PasswordAuthentication\s'
+        line: 'PasswordAuthentication no'
+        state: present
+      tags:
+        - hardeningssh
+    - name: Hardening SSH Server - PermitRootLogin no
+      become: yes
+      ignore_errors: yes
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?\s*PermitRootLogin\s'
+        line: 'PermitRootLogin no'
+        state: present
+      tags:
+        - hardeningssh
+    - name: Copy SSH keys id_ed25519
+      ignore_errors: yes
+      copy:
+        src: /ssh/id_ed25519
+        dest: /home/{{ username }}/.ssh/id_ed25519
+        mode: '0600'
+      tags:
+        - copysshkeys
+    - name: Copy SSH keys id_ed25519.pub
+      ignore_errors: yes
+      copy:
+        src: /ssh/id_ed25519.pub
+        dest: /home/{{ username }}/.ssh/id_ed25519.pub
+        mode: '0600'
+      tags:
+        - copysshkeys
+    - name: Copy SSH keys id_rsa
+      ignore_errors: yes
+      copy:
+        src: /ssh/id_rsa
+        dest: /home/{{ username }}/.ssh/id_rsa
+        mode: '0600'
+      tags:
+        - copysshkeys
+    - name: Copy SSH keys id_rsa.pub
+      ignore_errors: yes
+      copy:
+        src: /ssh/id_rsa.pub
+        dest: /home/{{ username }}/.ssh/id_rsa.pub
+        mode: '0600'
+      tags:
+        - copysshkeys
     - name: Remove content of auto-update
       become: yes
       ignore_errors: yes
@@ -57,6 +109,13 @@
           - linux-headers-{{ ansible_facts['kernel'] }}
           - openssh-server
         state: latest
+    - name: Install FUSE2 on Ubuntu 22.04
+      become: yes
+      when: ansible_facts['lsb']['release'] == "22.04"
+      apt:
+        name:
+          - libfuse2
+        state: latest
     - name: Enable Docker service
       become: yes
       ansible.builtin.systemd:
@@ -81,3 +140,36 @@
         name: "{{ username }}"
         groups: docker
         append: yes
+    # PiHole section. Tuning to use PiHole
+    # Can skip because they are tagged
+    - name: Replace DNS for PiHole
+      become: yes
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/resolved.conf
+        regexp: '^#DNS='
+        line: DNS=8.8.8.8
+      tags:
+        - pihole
+    - name: Replace DNSStublistener for PiHole
+      become: yes
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/resolved.conf
+        regexp: '^#DNSStubListener='
+        line: DNSStubListener=no
+      tags:
+        - pihole
+    - name: Remove symlink for PiHole
+      become: yes
+      file:
+        path: /run/systemd/resolve/resolv.conf
+        state: absent
+      tags:
+        - pihole
+    - name: Add symlink for PiHole
+      become: yes
+      file:
+        src: /etc/resolv.conf
+        dest: /run/systemd/resolve/resolv.conf
+        state: link
+      tags:
+        - pihole
