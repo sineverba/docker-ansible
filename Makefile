@@ -48,6 +48,7 @@ server:
 	-v ~/.ssh:/ssh:ro \
 	--name $(CONTAINER_NAME) \
 	$(IMAGE_NAME):$(VERSION) \
+	--skip-tags "copysshkeys,pihole" \
 	-i /playbook/inventory.yml \
 	/playbook/server.yml \
 	-e username=user \
@@ -55,9 +56,9 @@ server:
 
 test:
 	docker run --rm -it --entrypoint cat --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) /etc/os-release | grep "Debian GNU/Linux 10 (buster)"
-	docker run --rm -it --entrypoint python --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) --version | grep "Python 3.10.6"
-	docker run --rm -it --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) | grep "core 2.13.3"
-	docker run --rm -it --entrypoint ssh --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) -V | grep "9.0"
+	docker run --rm -it --entrypoint python --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) --version | grep "Python 3.11.1"
+	docker run --rm -it --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) | grep "core 2.14.1"
+	docker run --rm -it --entrypoint ssh --name $(CONTAINER_NAME) $(IMAGE_NAME):$(VERSION) -V | grep "9.1"
 
 
 destroy:

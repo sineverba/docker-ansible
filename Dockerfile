@@ -1,4 +1,4 @@
-FROM python:3.10.6-slim-buster
+FROM python:3.11.1-slim-buster
 # Update and upgrade
 RUN apt-get update -y && apt-get upgrade -y
 # Install requirements
@@ -7,13 +7,13 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
 # Upgrade openssh
 RUN mkdir /var/lib/sshd
 RUN chmod -R 700 /var/lib/sshd && chown -R root:sys /var/lib/sshd
-RUN wget -c https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.0p1.tar.gz
-RUN tar -xzf openssh-9.0p1.tar.gz
-WORKDIR openssh-9.0p1
+RUN wget -c https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.1p1.tar.gz
+RUN tar -xzf openssh-9.1p1.tar.gz
+WORKDIR openssh-9.1p1
 RUN ./configure --with-kerberos5 --with-md5-passwords --with-pam --with-selinux --with-privsep-path=/var/lib/sshd/ --sysconfdir=/etc/ssh
 RUN make && make install
 WORKDIR /
-RUN rm -r /openssh-9.0p1 && rm -r openssh-9.0p1.tar.gz
+RUN rm -r /openssh-9.1p1 && rm -r openssh-9.1p1.tar.gz
 # Setup PIP and Ansible
 RUN pip install pip --upgrade
 COPY requirements.txt .

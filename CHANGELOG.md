@@ -1,4 +1,7 @@
-# 1.3.0
+# Next version
++ Upgrade dependencies
+
+## 1.3.0
 + Upgrade dependencies
 + Add ignore errors
 + Add PiHole section for server
