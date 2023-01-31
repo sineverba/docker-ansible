@@ -1,5 +1,6 @@
 # Next version
 + Upgrade dependencies
++ Refactor Semaphore + Add ssh keys to desktop playbook
 
 ## 1.3.0
 + Upgrade dependencies
