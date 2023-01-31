@@ -57,6 +57,14 @@
         mode: '0600'
       tags:
         - copysshkeys
+    - name: Copy SSH keys id_ecdsa
+      ignore_errors: yes
+      copy:
+        src: /ssh/id_ecdsa
+        dest: /home/{{ username }}/.ssh/id_ecdsa
+        mode: '0600'
+      tags:
+        - copysshkeys
     - name: Remove content of auto-update
       become: yes
       ignore_errors: yes

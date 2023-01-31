@@ -10,6 +10,10 @@ Docker Ansible
 
 ## Run
 
+1. (If needed) setup `openssh-server`
+
+	`# apt-get install openssh-server`
+
 1. Copy your ssh keys into destination servers / desktops
 
     `ssh-copy-id -i /home/sineverba/.ssh/id_ed25519.pub sineverba@192.168.1.32`
