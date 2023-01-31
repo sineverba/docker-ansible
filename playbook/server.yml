@@ -57,6 +57,14 @@
         mode: '0600'
       tags:
         - copysshkeys
+    - name: Copy SSH keys id_ecdsa
+      ignore_errors: yes
+      copy:
+        src: /ssh/id_ecdsa
+        dest: /home/{{ username }}/.ssh/id_ecdsa
+        mode: '0600'
+      tags:
+        - copysshkeys
     - name: Remove content of auto-update
       become: yes
       ignore_errors: yes
@@ -94,9 +102,6 @@
           #!/bin/bash
           apt update -y && apt-get update -y && apt-get upgrade -y && apt dist-upgrade -y && apt-get autoremove -y && apt-get clean -y && apt-get autoclean -y && apt purge -y
         mode: a+x
-    - name: Run update shell command
-      become: yes
-      script: /bin/bash /home/{{ username }}/update.sh
     - name: Install dependencies
       become: yes
       apt:

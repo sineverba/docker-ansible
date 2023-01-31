@@ -7,6 +7,46 @@
     openfortigui_version: 0.9.5-1
     virtualbox_version: 6.1
   tasks:
+    - name: Copy SSH keys id_ed25519
+      ignore_errors: yes
+      copy:
+        src: /ssh/id_ed25519
+        dest: /home/{{ username }}/.ssh/id_ed25519
+        mode: '0600'
+      tags:
+        - copysshkeys
+    - name: Copy SSH keys id_ed25519.pub
+      ignore_errors: yes
+      copy:
+        src: /ssh/id_ed25519.pub
+        dest: /home/{{ username }}/.ssh/id_ed25519.pub
+        mode: '0600'
+      tags:
+        - copysshkeys
+    - name: Copy SSH keys id_rsa
+      ignore_errors: yes
+      copy:
+        src: /ssh/id_rsa
+        dest: /home/{{ username }}/.ssh/id_rsa
+        mode: '0600'
+      tags:
+        - copysshkeys
+    - name: Copy SSH keys id_rsa.pub
+      ignore_errors: yes
+      copy:
+        src: /ssh/id_rsa.pub
+        dest: /home/{{ username }}/.ssh/id_rsa.pub
+        mode: '0600'
+      tags:
+        - copysshkeys
+    - name: Copy SSH keys id_ecdsa
+      ignore_errors: yes
+      copy:
+        src: /ssh/id_ecdsa
+        dest: /home/{{ username }}/.ssh/id_ecdsa
+        mode: '0600'
+      tags:
+        - copysshkeys
     - name: Remove dependencies
       become: yes
       apt:

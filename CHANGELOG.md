@@ -1,4 +1,8 @@
-# 1.3.0
+# 1.4.0
++ Upgrade dependencies
++ Refactor Semaphore + Add ssh keys to desktop playbook
+
+## 1.3.0
 + Upgrade dependencies
 + Add ignore errors
 + Add PiHole section for server

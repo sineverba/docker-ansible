@@ -10,6 +10,10 @@ Docker Ansible
 
 ## Run
 
+1. (If needed) setup `openssh-server`
+
+	`# apt-get install openssh-server`
+
 1. Copy your ssh keys into destination servers / desktops
 
     `ssh-copy-id -i /home/sineverba/.ssh/id_ed25519.pub sineverba@192.168.1.32`
@@ -27,7 +31,7 @@ Docker Ansible
 	-v ${pwd}/playbook:/playbook:ro \
 	-v ~/.ssh:/ssh:ro \
 	--name ansible \
-	sineverba/ansible:1.3.0 \
+	sineverba/ansible:1.4.0 \
 	# -v or -vvv or -vvvv for debug
 	# --skip-tags "pihole" \ # Add --skip-tags to skip tags, in the form of --skip-tags "a,b,c"
 	-i /playbook/inventory.yml \
