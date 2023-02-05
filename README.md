@@ -21,7 +21,7 @@ Docker Ansible
 
 2. Be sure that you can log to the server / desktop without password
 
-    `ssh sineverba@192.168.1.32`
+    `ssh user@192.168.1.32`
 
 3. Launch Ansible with
 
