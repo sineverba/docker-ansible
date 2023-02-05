@@ -1,4 +1,8 @@
-# 1.4.0
+# 1.5.0
++ Upgrade dependencies
++ Move playbooks to docker compose v2
+
+## 1.4.0
 + Upgrade dependencies
 + Refactor Semaphore + Add ssh keys to desktop playbook
 

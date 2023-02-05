@@ -21,7 +21,7 @@ Docker Ansible
 
 2. Be sure that you can log to the server / desktop without password
 
-    `ssh sineverba@192.168.1.32`
+    `ssh user@192.168.1.32`
 
 3. Launch Ansible with
 
@@ -31,7 +31,7 @@ Docker Ansible
 	-v ${pwd}/playbook:/playbook:ro \
 	-v ~/.ssh:/ssh:ro \
 	--name ansible \
-	sineverba/ansible:1.4.0 \
+	sineverba/ansible:1.5.0 \
 	# -v or -vvv or -vvvv for debug
 	# --skip-tags "pihole" \ # Add --skip-tags to skip tags, in the form of --skip-tags "a,b,c"
 	-i /playbook/inventory.yml \
