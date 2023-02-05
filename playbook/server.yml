@@ -3,7 +3,7 @@
   remote_user: "{{ username }}"
   vars:
     ansible_python_interpreter: /usr/bin/python3
-    dockercompose_version: 1.29.2
+    dockercompose_version: 2.15.1
   tasks:
     - name: Hardening SSH Server - PasswordAuthentication no
       become: yes
@@ -131,14 +131,19 @@
       ansible.builtin.systemd:
         name: docker
         state: started
+    - name: Create folder for docker compose
+      become: yes
+      file:
+        path: /usr/local/lib/docker/cli-plugins
+        state: directory
     - name: Download Docker Compose container
       become: yes
       get_url:
-        url: https://github.com/docker/compose/releases/download/{{ dockercompose_version }}/run.sh
-        dest: /usr/local/bin/docker-compose
+        url: https://github.com/docker/compose/releases/download/v{{ dockercompose_version }}/docker-compose-linux-{{ ansible_facts['architecture'] }}
+        dest: /usr/local/lib/docker/cli-plugins/docker-compose
     - name: Assign permissions to Docker Compose container
       become: yes
-      file: dest=/usr/local/bin/docker-compose mode=+x
+      file: dest=/usr/local/lib/docker/cli-plugins/docker-compose mode=+x
     - name: Add current user to docker group
       become: yes
       user:
