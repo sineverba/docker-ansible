@@ -1,10 +1,13 @@
 ---
-- hosts: desktops
+- hosts: servers
   remote_user: "{{ username }}"
   tasks:
     - name: Print all available facts
-      ansible.builtin.debug:
+      debug:
         var: ansible_facts
     - name: Print {{ ansible_distribution_release }}
-      ansible.builtin.debug:
+      debug:
         var: ansible_distribution_release
+    - name: Print architecture
+      debug:
+        var: ansible_facts['architecture']
