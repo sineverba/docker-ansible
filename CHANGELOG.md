@@ -1,4 +1,7 @@
-# 1.5.0
+# Next version
++ Update update script
+
+## 1.5.0
 + Upgrade dependencies
 + Move playbooks to docker compose v2
 
