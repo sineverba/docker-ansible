@@ -75,11 +75,21 @@
         dest: /home/{{ username }}/update.sh
         content: |
           #!/bin/bash
-          apt update -y && apt-get update -y && apt-get upgrade -y && apt dist-upgrade -y && apt-get autoremove -y && apt-get clean -y && apt-get autoclean -y && apt purge -y
+          # Update NVM
+          cd "$NVM_DIR"
+          git fetch --tags origin
+          git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
+          \. "$NVM_DIR/nvm.sh"
+          # Update system
+          sudo apt update -y && \
+          sudo apt-get update -y && \
+          sudo apt-get upgrade -y && \
+          sudo apt dist-upgrade -y && \
+          sudo apt-get autoremove -y && \
+          sudo apt-get clean -y && \
+          sudo apt-get autoclean -y && \
+          sudo apt purge -y
         mode: a+x
-    - name: Run update shell command
-      become: yes
-      script: /bin/bash /home/{{ username }}/update.sh
     - name: Install software
       become: yes
       apt:
