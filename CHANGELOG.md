@@ -1,4 +1,4 @@
-# Next version
+# 1.6.0
 + Update update script
 + Remove nvm update script
 
