@@ -1,4 +1,8 @@
-# 1.5.0
+# 1.6.0
++ Update update script
++ Remove nvm update script
+
+## 1.5.0
 + Upgrade dependencies
 + Move playbooks to docker compose v2
 
