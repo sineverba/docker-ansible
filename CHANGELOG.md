@@ -1,5 +1,6 @@
 # Next version
 + Update update script
++ Remove nvm update script
 
 ## 1.5.0
 + Upgrade dependencies
