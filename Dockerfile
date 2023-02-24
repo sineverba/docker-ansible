@@ -1,4 +1,4 @@
-FROM python:3.11.1-slim-buster
+FROM python:3.11.2-slim-buster
 # Update and upgrade
 RUN apt-get update -y && apt-get upgrade -y
 # Install requirements
