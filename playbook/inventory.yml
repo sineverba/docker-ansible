@@ -29,7 +29,7 @@ all:
 
 desktops:
   hosts:
-    10.3.0.201:
+    192.168.1.31:
 
 # Ex 2: A collection of hosts belonging to the 'webservers' group, with shared group var
 ##webservers:
@@ -39,7 +39,7 @@ servers:
 ##     beta.example.org:
 ##     192.168.1.100:
 ##     192.168.1.110:
-    192.168.1.28:
+    192.168.1.32:
 ##  vars:
 ##    http_port: 8080
 

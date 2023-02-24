@@ -1,7 +1,7 @@
 IMAGE_NAME=sineverba/ansible
 CONTAINER_NAME=ansible
-APP_VERSION=1.6.0-dev
-BUILDX_VERSION=0.10.2
+APP_VERSION=1.7.0-dev
+BUILDX_VERSION=0.10.3
 BINFMT_VERSION=qemu-v7.0.0-28
 TOPDIR=$(PWD)
 
@@ -20,7 +20,7 @@ preparemulti:
 	docker buildx create --name multiarch --driver docker-container --use
 	docker buildx inspect --bootstrap --builder multiarch
 
-multi:
+multi: preparemulti
 	docker buildx build \
 		--platform linux/arm64/v8,linux/amd64 \
 		--tag $(IMAGE_NAME):$(APP_VERSION) \
@@ -76,7 +76,7 @@ server:
 	-v ~/.ssh:/ssh:ro \
 	--name $(CONTAINER_NAME) \
 	$(IMAGE_NAME):$(APP_VERSION) \
-	--skip-tags "copysshkeys,pihole" \
+	--skip-tags "pihole" \
 	-i /playbook/inventory.yml \
 	/playbook/server.yml \
 	-e username=user \
@@ -84,7 +84,7 @@ server:
 
 test:
 	docker run --rm -it --entrypoint cat --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) /etc/os-release | grep "Debian GNU/Linux 10 (buster)"
-	docker run --rm -it --entrypoint python --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) --version | grep "Python 3.11.1"
+	docker run --rm -it --entrypoint python --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) --version | grep "Python 3.11.2"
 	docker run --rm -it --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) | grep "core 2.14.2"
 	docker run --rm -it --entrypoint ssh --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) -V | grep "9.2"
 
