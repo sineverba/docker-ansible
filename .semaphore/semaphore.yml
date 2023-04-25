@@ -16,7 +16,7 @@ global_job_config:
     - name: PYTHON_VERSION
       value: 3.11.3
     - name: OPENSSH_VERSION
-      value: 9.3
+      value: "9.3"
 
 blocks:
   - name: 'Build and test'
