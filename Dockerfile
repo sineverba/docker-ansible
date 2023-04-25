@@ -1,11 +1,13 @@
-FROM python:3.11.2-slim-buster
+ARG PYTHON_VERSION=latest
+FROM python:$PYTHON_VERSION-slim-buster
 # Update and upgrade
 RUN apt-get update -y && apt-get upgrade -y
 # Install requirements
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     openssh-client sshpass build-essential zlib1g-dev libssl-dev wget libpam0g-dev libselinux1-dev libkrb5-dev
 # Upgrade openssh
-ARG OPENSSH_VERSION=9.2
+ARG OPENSSH_VERSION=9.3
+ENV OPENSSH_VERSION $OPENSSH_VERSION
 RUN mkdir /var/lib/sshd
 RUN chmod -R 700 /var/lib/sshd && chown -R root:sys /var/lib/sshd
 RUN wget -c https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${OPENSSH_VERSION}p1.tar.gz
