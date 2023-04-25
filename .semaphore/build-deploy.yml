@@ -29,7 +29,7 @@ global_job_config:
     - name: PYTHON_VERSION
       value: 3.11.3
     - name: OPENSSH_VERSION
-      value: 9.3
+      value: "9.3"
 
 blocks:
   - name: 'Build and deploy'
@@ -53,9 +53,9 @@ blocks:
             - docker buildx create --name multiarch --driver docker-container --use
             - docker buildx inspect --bootstrap --builder multiarch
             - >-
-              docker buildx build
-              --build-arg PYTHON_VERSION=$PYTHON_VERSION
-		          --build-arg OPENSSH_VERSION=$OPENSSH_VERSION
+              docker buildx build 
+              --build-arg PYTHON_VERSION=$PYTHON_VERSION 
+              --build-arg OPENSSH_VERSION=$OPENSSH_VERSION 
               --platform linux/arm64/v8,linux/amd64
               --tag $DOCKER_USERNAME/$DOCKER_IMAGE:$SEMAPHORE_GIT_TAG_NAME
               --tag $DOCKER_USERNAME/$DOCKER_IMAGE:latest
