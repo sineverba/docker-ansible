@@ -1,7 +1,9 @@
 IMAGE_NAME=sineverba/ansible
 CONTAINER_NAME=ansible
-APP_VERSION=1.7.0-dev
-BUILDX_VERSION=0.10.3
+APP_VERSION=1.8.0-dev
+PYTHON_VERSION=3.11.3
+OPENSSH_VERSION=9.3
+BUILDX_VERSION=0.10.4
 BINFMT_VERSION=qemu-v7.0.0-28
 TOPDIR=$(PWD)
 
@@ -23,15 +25,22 @@ preparemulti:
 multi: preparemulti
 	docker buildx build \
 		--platform linux/arm64/v8,linux/amd64 \
+		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
+		--build-arg OPENSSH_VERSION=$(OPENSSH_VERSION) \
 		--tag $(IMAGE_NAME):$(APP_VERSION) \
 		--file Dockerfile "."
 
 build:
-	docker build --tag $(IMAGE_NAME):$(APP_VERSION) --file Dockerfile "."
+	docker build \
+		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
+		--build-arg OPENSSH_VERSION=$(OPENSSH_VERSION) \
+		--tag $(IMAGE_NAME):$(APP_VERSION) \
+		--file Dockerfile "."
 
 upgrade:
 	sed -i 's/==/>=/' requirements.txt
 	docker build \
+		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
 		--tag $(IMAGE_NAME):$(APP_VERSION) \
 		--no-cache \
 		--progress=plain \
@@ -84,10 +93,11 @@ server:
 
 test:
 	docker run --rm -it --entrypoint cat --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) /etc/os-release | grep "Debian GNU/Linux 10 (buster)"
-	docker run --rm -it --entrypoint python --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) --version | grep "Python 3.11.2"
-	docker run --rm -it --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) | grep "core 2.14.2"
-	docker run --rm -it --entrypoint ssh --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) -V | grep "9.2"
+	docker run --rm -it --entrypoint python --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) --version | grep $(PYTHON_VERSION)
+	docker run --rm -it --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) | grep "core 2.14.5"
+	docker run --rm -it --entrypoint ssh --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) -V | grep $(OPENSSH_VERSION)
 
 
 destroy:
+	docker image rm python:$(PYTHON_VERSION)-slim-buster
 	docker image rm $(IMAGE_NAME):$(APP_VERSION)

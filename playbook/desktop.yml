@@ -2,7 +2,7 @@
 - hosts: desktops
   remote_user: "{{ username }}"
   vars:
-    dockercompose_version: 2.16.0
+    dockercompose_version: 2.17.3
     nvm_version: 0.39.3
     openfortigui_version: 0.9.8-1
     virtualbox_version: 7.0
@@ -59,10 +59,17 @@
       ansible.builtin.apt_key:  
         url: https://www.virtualbox.org/download/oracle_vbox_2016.asc
         state: present
-    - name: Add Oracle Repository
+    - name: Add Oracle Repository (Not Ubuntu 22.04)
       become: yes
+      when: ansible_facts['lsb']['release'] != "23.04"
       ansible.builtin.apt_repository:
         repo: "deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian {{ ansible_distribution_release }} contrib"
+        state: present
+    - name: Add Oracle Repository (on Ubuntu 23.04)
+      become: yes
+      when: ansible_facts['lsb']['release'] == "23.04"
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian jammy contrib"
         state: present
     - name: Update and upgrade apt packages
       become: yes
@@ -102,7 +109,7 @@
           - virtualbox-guest-x11
           - wireguard
         state: latest
-    - name: Install FUSE2 on Ubuntu 22.04
+    - name: Install FUSE2 (on Ubuntu 22.04)
       become: yes
       when: ansible_facts['lsb']['release'] == "22.04"
       apt:
