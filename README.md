@@ -49,6 +49,4 @@ Docker Ansible
 
 
 ### Upgrade requirements
-1. Run Dockerfile.upgrade with `$ make upgrade`
-2. Copy and paste the output of previous command inside `requirements.txt`
-3. Run `$ make build`
+`$ make upgrade`

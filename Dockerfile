@@ -1,5 +1,5 @@
 ARG PYTHON_VERSION=latest
-FROM python:$PYTHON_VERSION-slim-buster
+FROM python:$PYTHON_VERSION-slim-bookworm
 # Update and upgrade
 RUN apt-get update -y && apt-get upgrade -y
 # Install requirements

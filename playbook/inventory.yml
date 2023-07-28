@@ -29,7 +29,7 @@ all:
 
 desktops:
   hosts:
-    192.168.1.35:
+    192.168.1.57:
 
 # Ex 2: A collection of hosts belonging to the 'webservers' group, with shared group var
 ##webservers:
