@@ -23,11 +23,11 @@ global_job_config:
     - name: DOCKER_IMAGE
       value: ansible
     - name: BUILDX_VERSION
-      value: 0.10.4
+      value: 0.11.2
     - name: BINFMT_VERSION
       value: qemu-v7.0.0-28
     - name: PYTHON_VERSION
-      value: 3.11.3
+      value: 3.11.4
     - name: OPENSSH_VERSION
       value: "9.3"
 

@@ -31,7 +31,7 @@ Docker Ansible
 	-v ${pwd}/playbook:/playbook:ro \
 	-v ~/.ssh:/ssh:ro \
 	--name ansible \
-	sineverba/ansible:1.8.0 \
+	sineverba/ansible:1.9.0 \
 	# -v or -vvv or -vvvv for debug
 	# --skip-tags "pihole" \ # Add --skip-tags to skip tags, in the form of --skip-tags "a,b,c"
 	-i /playbook/inventory.yml \
@@ -49,6 +49,4 @@ Docker Ansible
 
 
 ### Upgrade requirements
-1. Run Dockerfile.upgrade with `$ make upgrade`
-2. Copy and paste the output of previous command inside `requirements.txt`
-3. Run `$ make build`
+`$ make upgrade`

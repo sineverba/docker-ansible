@@ -2,8 +2,8 @@
 - hosts: desktops
   remote_user: "{{ username }}"
   vars:
-    dockercompose_version: 2.17.3
-    nvm_version: 0.39.3
+    dockercompose_version: 2.20.2
+    nvm_version: 0.39.4
     openfortigui_version: 0.9.8-1
     virtualbox_version: 7.0
   tasks:

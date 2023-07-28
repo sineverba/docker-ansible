@@ -1,9 +1,9 @@
 IMAGE_NAME=sineverba/ansible
 CONTAINER_NAME=ansible
-APP_VERSION=1.8.0-dev
-PYTHON_VERSION=3.11.3
+APP_VERSION=1.9.0-dev
+PYTHON_VERSION=3.11.4
 OPENSSH_VERSION=9.3
-BUILDX_VERSION=0.10.4
+BUILDX_VERSION=0.11.2
 BINFMT_VERSION=qemu-v7.0.0-28
 TOPDIR=$(PWD)
 
@@ -35,17 +35,22 @@ build:
 		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
 		--build-arg OPENSSH_VERSION=$(OPENSSH_VERSION) \
 		--tag $(IMAGE_NAME):$(APP_VERSION) \
+		--no-cache \
+		--progress=plain \
 		--file Dockerfile "."
 
 upgrade:
-	sed -i 's/==/>=/' requirements.txt
-	docker build \
-		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
-		--tag $(IMAGE_NAME):$(APP_VERSION) \
-		--no-cache \
-		--progress=plain \
-		-f Dockerfile.upgrade "."
-	docker image rm $(IMAGE_NAME):$(APP_VERSION)
+	mkdir -p req
+	cp requirements.txt req/
+	sed -i 's/==/>=/' req/requirements.txt
+	docker run --rm -v $(TOPDIR)/req:/usr/src/app \
+		python:$(PYTHON_VERSION)-slim-bookworm /bin/sh \
+		-c "cd /usr/src/app && pip install --upgrade pip && pip install -r requirements.txt && pip freeze > requirements.txt && cat requirements.txt"
+	# Copy requirements
+	rm -rf requirements.txt
+	cp req/requirements.txt requirements.txt
+	rm -rf req/
+	docker image rm python:$(PYTHON_VERSION)-slim-bookworm
 
 inspect:
 	docker run \
@@ -92,12 +97,12 @@ server:
 	-e ansible_become_pass=password
 
 test:
-	docker run --rm -it --entrypoint cat --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) /etc/os-release | grep "Debian GNU/Linux 10 (buster)"
+	docker run --rm -it --entrypoint cat --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) /etc/os-release | grep "Debian GNU/Linux 12 (bookworm)"
 	docker run --rm -it --entrypoint python --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) --version | grep $(PYTHON_VERSION)
-	docker run --rm -it --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) | grep "core 2.14.5"
+	docker run --rm -it --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) | grep "core 2.15.2"
 	docker run --rm -it --entrypoint ssh --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) -V | grep $(OPENSSH_VERSION)
 
 
 destroy:
-	docker image rm python:$(PYTHON_VERSION)-slim-buster
+	docker image rm python:$(PYTHON_VERSION)-slim-bookworm
 	docker image rm $(IMAGE_NAME):$(APP_VERSION)
