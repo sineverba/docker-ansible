@@ -1,9 +1,10 @@
 IMAGE_NAME=sineverba/ansible
 CONTAINER_NAME=ansible
-APP_VERSION=1.9.0-dev
+APP_VERSION=1.9.1-dev
 PYTHON_VERSION=3.11.4
 OPENSSH_VERSION=9.3
 BUILDX_VERSION=0.11.2
+ANSIBLE_GALAXY_VERSION=6.6.0
 BINFMT_VERSION=qemu-v7.0.0-28
 TOPDIR=$(PWD)
 
@@ -34,8 +35,8 @@ build:
 	docker build \
 		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
 		--build-arg OPENSSH_VERSION=$(OPENSSH_VERSION) \
+		--build-arg ANSIBLE_GALAXY_VERSION=$(ANSIBLE_GALAXY_VERSION) \
 		--tag $(IMAGE_NAME):$(APP_VERSION) \
-		--no-cache \
 		--progress=plain \
 		--file Dockerfile "."
 
@@ -101,6 +102,7 @@ test:
 	docker run --rm -it --entrypoint python --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) --version | grep $(PYTHON_VERSION)
 	docker run --rm -it --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) | grep "core 2.15.2"
 	docker run --rm -it --entrypoint ssh --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) -V | grep $(OPENSSH_VERSION)
+	docker run --rm -it --entrypoint ansible-galaxy --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) collection list community.general | grep $(ANSIBLE_GALAXY_VERSION)
 
 
 destroy:

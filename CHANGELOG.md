@@ -1,4 +1,7 @@
-# 1.9.0
+# 1.9.1
++ Fix snap errors. See [https://github.com/ansible-collections/community.general/issues/7265](https://github.com/ansible-collections/community.general/issues/7265)
+
+## 1.9.0
 + Upgrade dependencies
 
 ## 1.8.0
