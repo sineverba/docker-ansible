@@ -1,4 +1,7 @@
-# 1.9.1
+# 1.9.2
++ Fix deploy (missing galaxy version)
+
+## 1.9.1
 + Fix snap errors. See [https://github.com/ansible-collections/community.general/issues/7265](https://github.com/ansible-collections/community.general/issues/7265)
 
 ## 1.9.0
