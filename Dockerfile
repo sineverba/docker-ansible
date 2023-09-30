@@ -27,6 +27,10 @@ RUN rm -r /openssh-${OPENSSH_VERSION}p1 && rm -r openssh-${OPENSSH_VERSION}p1.ta
 RUN pip install pip --upgrade
 COPY requirements.txt .
 RUN pip install -r requirements.txt
+# Setup specific version of Galaxy Collection
+ARG ANSIBLE_GALAXY_VERSION=7.3.0
+ENV ANSIBLE_GALAXY_VERSION $ANSIBLE_GALAXY_VERSION
+RUN ansible-galaxy collection install community.general:==${ANSIBLE_GALAXY_VERSION}
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
