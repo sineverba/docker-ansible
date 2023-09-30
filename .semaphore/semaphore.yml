@@ -32,7 +32,8 @@ blocks:
             - >-
               docker build 
               --build-arg PYTHON_VERSION=$PYTHON_VERSION 
-              --build-arg OPENSSH_VERSION=$OPENSSH_VERSION 
+              --build-arg OPENSSH_VERSION=$OPENSSH_VERSION
+              --build-arg ANSIBLE_GALAXY_VERSION=$ANSIBLE_GALAXY_VERSION
               --tag $DOCKER_USERNAME/$DOCKER_IMAGE .
             - docker run --rm -it --entrypoint cat --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE /etc/os-release | grep "Debian GNU/Linux 12 (bookworm)"
             - docker run --rm -it --entrypoint python --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE --version | grep $PYTHON_VERSION
