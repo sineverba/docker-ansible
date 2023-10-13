@@ -1,8 +1,8 @@
 IMAGE_NAME=sineverba/ansible
 CONTAINER_NAME=ansible
 APP_VERSION=1.9.2-dev
-PYTHON_VERSION=3.11.4
-OPENSSH_VERSION=9.3
+PYTHON_VERSION=3.12.0
+OPENSSH_VERSION=9.5
 BUILDX_VERSION=0.11.2
 ANSIBLE_GALAXY_VERSION=6.6.0
 BINFMT_VERSION=qemu-v7.0.0-28
@@ -56,7 +56,7 @@ upgrade:
 inspect:
 	docker run \
 	--rm -it \
-	--entrypoint /bin/sh \
+	--entrypoint /bin/bash \
 	--name $(CONTAINER_NAME) \
 	$(IMAGE_NAME):$(APP_VERSION)
 

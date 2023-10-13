@@ -6,7 +6,7 @@ RUN apt-get update -y && apt-get upgrade -y
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     openssh-client sshpass build-essential zlib1g-dev libssl-dev wget libpam0g-dev libselinux1-dev libkrb5-dev
 # Upgrade openssh
-ARG OPENSSH_VERSION=9.3
+ARG OPENSSH_VERSION=9.5
 ENV OPENSSH_VERSION $OPENSSH_VERSION
 RUN mkdir /var/lib/sshd
 RUN chmod -R 700 /var/lib/sshd && chown -R root:sys /var/lib/sshd
