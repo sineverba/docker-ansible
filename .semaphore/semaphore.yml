@@ -37,7 +37,7 @@ blocks:
               --tag $DOCKER_USERNAME/$DOCKER_IMAGE .
             - docker run --rm -it --entrypoint cat --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE /etc/os-release | grep "Debian GNU/Linux 12 (bookworm)"
             - docker run --rm -it --entrypoint python --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE --version | grep $PYTHON_VERSION
-            - docker run --rm -it --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE | grep "core 2.15.2"
+            - docker run --rm -it --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE | grep "core 2.15.4"
             - docker run --rm -it --entrypoint ssh --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE -V | grep $OPENSSH_VERSION
             - docker run --rm -it --entrypoint ansible-galaxy --name $DOCKER_IMAGE $DOCKER_USERNAME/$DOCKER_IMAGE collection list community.general | grep $ANSIBLE_GALAXY_VERSION
 
