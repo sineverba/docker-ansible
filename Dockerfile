@@ -1,5 +1,5 @@
 ARG PYTHON_VERSION=latest
-FROM python:$PYTHON_VERSION-slim-bookworm
+FROM --platform=$BUILDPLATFORM python:$PYTHON_VERSION-slim-bookworm
 # Update and upgrade
 RUN apt-get update -y && apt-get upgrade -y
 # Install requirements
@@ -28,7 +28,7 @@ RUN pip install pip --upgrade
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 # Setup specific version of Galaxy Collection
-ARG ANSIBLE_GALAXY_VERSION=7.3.0
+ARG ANSIBLE_GALAXY_VERSION=8.2.0
 ENV ANSIBLE_GALAXY_VERSION $ANSIBLE_GALAXY_VERSION
 RUN ansible-galaxy collection install community.general:==${ANSIBLE_GALAXY_VERSION}
 COPY entrypoint.sh /entrypoint.sh
