@@ -1,5 +1,6 @@
 # Next version
 + Upgrade dependencies
++ Upgrade dependencies
 
 ## 1.9.2
 + Fix deploy (missing galaxy version)

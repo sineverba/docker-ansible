@@ -23,15 +23,13 @@ global_job_config:
     - name: DOCKER_IMAGE
       value: ansible
     - name: BUILDX_VERSION
-      value: 0.11.2
-    - name: BINFMT_VERSION
-      value: qemu-v7.0.0-28
+      value: 0.12.1
     - name: PYTHON_VERSION
-      value: 3.12.0
+      value: 3.12.1
     - name: OPENSSH_VERSION
-      value: "9.5"
+      value: "9.6"
     - name: ANSIBLE_GALAXY_VERSION
-      value: 6.6.0
+      value: 8.2.0
 
 blocks:
   - name: 'Build and deploy'
@@ -42,24 +40,20 @@ blocks:
             - checkout
             - mkdir -vp ~/.docker/cli-plugins/
             - >-
-              curl
-              --silent
-              -L
-              "https://github.com/docker/buildx/releases/download/v$BUILDX_VERSION/buildx-v$BUILDX_VERSION.linux-amd64"
-              >
+              curl 
+              --silent 
+              -L 
+              "https://github.com/docker/buildx/releases/download/v$BUILDX_VERSION/buildx-v$BUILDX_VERSION.linux-amd64" 
+              > 
               ~/.docker/cli-plugins/docker-buildx
             - chmod a+x ~/.docker/cli-plugins/docker-buildx
-            - docker buildx version
-            - docker run --rm --privileged tonistiigi/binfmt:$BINFMT_VERSION --install all
-            - docker buildx ls
-            - docker buildx create --name multiarch --driver docker-container --use
-            - docker buildx inspect --bootstrap --builder multiarch
+            - docker buildx create --name multiarch --use
             - >-
               docker buildx build 
+              --platform linux/arm64/v8,linux/amd64,linux/arm/v6,linux/arm/v7 
               --build-arg PYTHON_VERSION=$PYTHON_VERSION 
               --build-arg OPENSSH_VERSION=$OPENSSH_VERSION 
               --build-arg ANSIBLE_GALAXY_VERSION=$ANSIBLE_GALAXY_VERSION 
-              --platform linux/arm64/v8,linux/amd64
               --tag $DOCKER_USERNAME/$DOCKER_IMAGE:$SEMAPHORE_GIT_TAG_NAME
               --tag $DOCKER_USERNAME/$DOCKER_IMAGE:latest
               --push "."

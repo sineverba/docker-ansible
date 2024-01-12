@@ -44,8 +44,11 @@ Docker Ansible
 
 ## Available architectures
 
++ linux/arm/v6
++ linux/arm64/v7
 + linux/arm64/v8
 + linux/amd64
+
 
 
 ### Upgrade requirements
