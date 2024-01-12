@@ -31,7 +31,7 @@ Docker Ansible
 	-v ${pwd}/playbook:/playbook:ro \
 	-v ~/.ssh:/ssh:ro \
 	--name ansible \
-	sineverba/ansible:1.9.2 \
+	sineverba/ansible:1.10.0 \
 	# -v or -vvv or -vvvv for debug
 	# --skip-tags "pihole" \ # Add --skip-tags to skip tags, in the form of --skip-tags "a,b,c"
 	-i /playbook/inventory.yml \
@@ -44,8 +44,11 @@ Docker Ansible
 
 ## Available architectures
 
++ linux/arm/v6
++ linux/arm64/v7
 + linux/arm64/v8
 + linux/amd64
+
 
 
 ### Upgrade requirements
