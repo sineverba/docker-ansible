@@ -80,6 +80,7 @@ desktop:
 	-v ~/.ssh:/ssh:ro \
 	--name $(CONTAINER_NAME) \
 	$(IMAGE_NAME):$(APP_VERSION) \
+	--skip-tags "virtualbox" \
 	-i /playbook/inventory.yml \
 	/playbook/desktop.yml \
 	-e username=user \

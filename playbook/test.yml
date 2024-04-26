@@ -1,5 +1,5 @@
 ---
-- hosts: servers
+- hosts: desktops
   remote_user: "{{ username }}"
   tasks:
     - name: Print all available facts
@@ -11,3 +11,6 @@
     - name: Print architecture
       debug:
         var: ansible_facts['architecture']
+    - name: Print version
+      debug:
+        var: ansible_facts['lsb']['release']
