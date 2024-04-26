@@ -1,5 +1,6 @@
 # Next version
 + Upgrade dependencies
++ Add Virtualbox tags
 
 ## 1.10.0
 + Upgrade dependencies

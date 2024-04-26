@@ -59,18 +59,24 @@
       ansible.builtin.apt_key:  
         url: https://www.virtualbox.org/download/oracle_vbox_2016.asc
         state: present
+      tags:
+        - virtualbox
     - name: Add Oracle Repository (Not Ubuntu 22.04)
       become: yes
       when: ansible_facts['lsb']['release'] != "23.04"
       ansible.builtin.apt_repository:
         repo: "deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian {{ ansible_distribution_release }} contrib"
         state: present
+      tags:
+        - virtualbox
     - name: Add Oracle Repository (on Ubuntu 23.04)
       become: yes
       when: ansible_facts['lsb']['release'] == "23.04"
       ansible.builtin.apt_repository:
         repo: "deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian jammy contrib"
         state: present
+      tags:
+        - virtualbox
     - name: Update and upgrade apt packages
       become: yes
       apt:
@@ -105,10 +111,17 @@
           - make
           - openssh-server
           - perl
-          - virtualbox-guest-additions-iso
-          - virtualbox-guest-x11
           - wireguard
         state: latest
+    - name: Install Virtualbox
+      become: yes
+      apt:
+        name:
+          - virtualbox-guest-additions-iso
+          - virtualbox-guest-x11
+        state: latest
+      tags:
+        - virtualbox
     - name: Install FUSE2 (on Ubuntu 22.04)
       become: yes
       when: ansible_facts['lsb']['release'] == "22.04"
@@ -121,6 +134,8 @@
       apt:
         name:
           - virtualbox-{{ virtualbox_version }}
+      tags:
+        - virtualbox
     - name: Install OpenFortiGUI dependency
       become: yes
       apt:
