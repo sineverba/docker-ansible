@@ -1,7 +1,5 @@
+.circleci/
 .semaphore/
-CHANGELOG.md
-CODE_OF_CONDUCT.md
-CONTRIBUTING.md
+*.md
 LICENSE
 Makefile
-README.md
