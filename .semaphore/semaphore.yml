@@ -18,7 +18,7 @@ global_job_config:
     - name: ANSIBLE_GALAXY_VERSION
       value: 8.6.0
     - name: OPEN_SSH_VERSION
-      value: 9.6
+      value: "9.6"
 
 blocks:
   - name: 'Build and test'
