@@ -2,9 +2,9 @@
 - hosts: desktops
   remote_user: "{{ username }}"
   vars:
-    dockercompose_version: 2.24.0
+    dockercompose_version: 2.27.0
     nvm_version: 0.39.7
-    openfortigui_version: 0.9.8-1
+    openfortigui_version: 0.9.10-1
     virtualbox_version: 7.0
   tasks:
     - name: Copy SSH keys id_ed25519

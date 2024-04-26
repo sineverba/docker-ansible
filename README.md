@@ -6,6 +6,7 @@ Docker Ansible
 | CI / CD | Status |
 | ------- | ------ |
 | Semaphore | [![Build Status](https://sineverba.semaphoreci.com/badges/docker-ansible/branches/master.svg?style=shields&key=a831bec4-7adb-49ad-ae54-9d049cc802e9)](https://sineverba.semaphoreci.com/projects/docker-ansible) |
+| CircleCI | [![CircleCI](https://dl.circleci.com/status-badge/img/gh/sineverba/docker-ansible/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/sineverba/docker-ansible/tree/master) |
 
 
 ## Run
@@ -48,8 +49,3 @@ Docker Ansible
 + linux/arm64/v7
 + linux/arm64/v8
 + linux/amd64
-
-
-
-### Upgrade requirements
-`$ make upgrade`

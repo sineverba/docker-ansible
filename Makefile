@@ -1,38 +1,11 @@
 IMAGE_NAME=sineverba/ansible
 CONTAINER_NAME=ansible
 APP_VERSION=1.10.0-dev
-PYTHON_VERSION=3.12.1
-OPENSSH_VERSION=9.6
-BUILDX_VERSION=0.12.1
-ANSIBLE_GALAXY_VERSION=8.2.0
-
-preparemulti:
-	-docker buildx rm multiarch
-	mkdir -vp ~/.docker/cli-plugins
-	curl \
-		-L \
-		"https://github.com/docker/buildx/releases/download/v$(BUILDX_VERSION)/buildx-v$(BUILDX_VERSION).linux-amd64" \
-		> \
-		~/.docker/cli-plugins/docker-buildx
-	chmod a+x ~/.docker/cli-plugins/docker-buildx
-	docker buildx create --name multiarch --use
-
-build: 
-	docker build \
-		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
-		--build-arg OPENSSH_VERSION=$(OPENSSH_VERSION) \
-		--build-arg ANSIBLE_GALAXY_VERSION=$(ANSIBLE_GALAXY_VERSION) \
-		--tag $(IMAGE_NAME):$(APP_VERSION) \
-		--file Dockerfile "."
-
-multi: preparemulti
-	docker buildx build \
-		--platform linux/arm64/v8,linux/amd64,linux/arm/v6,linux/arm/v7 \
-		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
-		--build-arg OPENSSH_VERSION=$(OPENSSH_VERSION) \
-		--build-arg ANSIBLE_GALAXY_VERSION=$(ANSIBLE_GALAXY_VERSION) \
-		--tag $(IMAGE_NAME):$(APP_VERSION) \
-		--file Dockerfile "."
+PYTHON_VERSION=3.12.3
+OPEN_SSH_VERSION=9.7
+ANSIBLE_GALAXY_VERSION=8.6.0
+BUILDX_VERSION=0.14.0
+BINFMT_VERSION=qemu-v8.1.5-43
 
 upgrade:
 	mkdir -p req
@@ -46,6 +19,40 @@ upgrade:
 	cp req/requirements.txt requirements.txt
 	rm -rf req/
 	docker image rm python:$(PYTHON_VERSION)-slim-bookworm
+
+preparemulti:
+	mkdir -vp ~/.docker/cli-plugins
+	curl \
+		-L \
+		"https://github.com/docker/buildx/releases/download/v$(BUILDX_VERSION)/buildx-v$(BUILDX_VERSION).linux-amd64" \
+		> \
+		~/.docker/cli-plugins/docker-buildx
+	chmod a+x ~/.docker/cli-plugins/docker-buildx
+	docker buildx version
+	docker run --rm --privileged tonistiigi/binfmt:$(BINFMT_VERSION) --install all
+	docker buildx ls
+	docker buildx rm multiarch
+	docker buildx create --name multiarch --driver docker-container --use
+	docker buildx inspect --bootstrap --builder multiarch
+
+build: 
+	docker build \
+		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
+		--build-arg OPEN_SSH_VERSION=$(OPEN_SSH_VERSION) \
+		--build-arg ANSIBLE_GALAXY_VERSION=$(ANSIBLE_GALAXY_VERSION) \
+		--tag $(IMAGE_NAME):$(APP_VERSION) \
+		--file Dockerfile \
+		"."
+
+multi: preparemulti
+	docker buildx build \
+		--platform linux/arm64/v8,linux/amd64,linux/arm/v6,linux/arm/v7 \
+		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
+		--build-arg OPEN_SSH_VERSION=$(OPEN_SSH_VERSION) \
+		--build-arg ANSIBLE_GALAXY_VERSION=$(ANSIBLE_GALAXY_VERSION) \
+		--tag $(IMAGE_NAME):$(APP_VERSION) \
+		--file Dockerfile \
+		"."
 
 inspect:
 	docker run \
@@ -92,13 +99,42 @@ server:
 	-e ansible_become_pass=password
 
 test:
-	docker run --rm -it --entrypoint cat --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) /etc/os-release | grep "Debian GNU/Linux 12 (bookworm)"
-	docker run --rm -it --entrypoint python --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) --version | grep $(PYTHON_VERSION)
-	docker run --rm -it --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) | grep "core 2.16.2"
-	docker run --rm -it --entrypoint ssh --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) -V | grep $(OPENSSH_VERSION)
-	docker run --rm -it --entrypoint ansible-galaxy --name $(CONTAINER_NAME) $(IMAGE_NAME):$(APP_VERSION) collection list community.general | grep $(ANSIBLE_GALAXY_VERSION)
+	docker run --rm -it \
+		--entrypoint \
+		cat \
+		--name $(CONTAINER_NAME) \
+		$(IMAGE_NAME):$(APP_VERSION) \
+		/etc/os-release | grep "Debian GNU/Linux 12 (bookworm)"
+	docker run --rm -it \
+		--entrypoint \
+		python \
+		--name $(CONTAINER_NAME) \
+		$(IMAGE_NAME):$(APP_VERSION) \
+		--version | grep $(PYTHON_VERSION)
+	docker run --rm -it \
+		--name $(CONTAINER_NAME) \
+		$(IMAGE_NAME):$(APP_VERSION) \
+		| grep "core 2.16.6"
+	docker run --rm -it \
+		--entrypoint \
+		ssh \
+		--name $(CONTAINER_NAME) \
+		$(IMAGE_NAME):$(APP_VERSION) \
+		-V | grep $(OPEN_SSH_VERSION)
+	docker run --rm -it \
+		--entrypoint \
+		ansible-galaxy \
+		--name $(CONTAINER_NAME) \
+		$(IMAGE_NAME):$(APP_VERSION) \
+		collection list community.general | grep $(ANSIBLE_GALAXY_VERSION)
 
 
 destroy:
-	docker image rm python:$(PYTHON_VERSION)-slim-bookworm
-	docker image rm $(IMAGE_NAME):$(APP_VERSION)
+	# Remove all images with no current tag
+	docker rmi $$(docker images $(IMAGE_NAME):* --format "{{.Repository}}:{{.Tag}}" | grep -v '$(APP_VERSION)') || exit 0;
+	# Remove all python images
+	docker rmi $$(docker images python --format "{{.Repository}}:{{.Tag}}") || exit 0;
+	# Remove all dangling images
+	docker rmi $$(docker images -f "dangling=true" -q) || exit 0;
+	# Remove cached builder
+	docker builder prune -f
