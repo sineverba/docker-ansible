@@ -1,6 +1,7 @@
 # Next version
 + Upgrade dependencies
 + Add Virtualbox tags
++ Add update docker compose to update script
 
 ## 1.10.0
 + Upgrade dependencies

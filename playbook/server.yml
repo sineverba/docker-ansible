@@ -101,6 +101,20 @@
         dest: /home/{{ username }}/update.sh
         content: |
           #!/bin/bash
+          # Ottieni la versione più recente di Docker Compose
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
+          # Ottieni l'architettura e il sistema operativo della macchina
+          ARCH=$(uname -m)
+          OS=$(uname | tr '[:upper:]' '[:lower:]')
+          # Se il sistema è MacOS, cambia l'OS in "darwin"
+          if [ "$OS" = "darwin" ]; then
+            OS="darwin"
+          fi
+          # Costruisci l'URL per il download di Docker Compose
+          URL="https://github.com/docker/compose/releases/download/${LATEST_VERSION}/docker-compose-${OS}-${ARCH}"
+          curl -L $URL -o /usr/local/lib/docker/cli-plugins/docker-compose
+          chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+          # Update system
           apt update -y && \
           apt-get update -y && \
           apt-get upgrade -y && \
