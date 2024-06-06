@@ -2,6 +2,7 @@ FROM python:3.12.3-slim-bookworm
 # Update and upgrade
 RUN apt-get update -y && \
     apt-get install -y \
+    bash-completion \
     git \
     make \
     openssh-client

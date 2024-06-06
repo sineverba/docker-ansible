@@ -33,7 +33,7 @@ build:
 		--build-arg OPEN_SSH_VERSION=$(OPEN_SSH_VERSION) \
 		--build-arg ANSIBLE_GALAXY_VERSION=$(ANSIBLE_GALAXY_VERSION) \
 		--tag $(IMAGE_NAME):$(APP_VERSION) \
-		--file Dockerfile \
+		--file dockerfiles/production/Dockerfile \
 		"."
 
 inspect:

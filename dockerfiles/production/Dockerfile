@@ -39,7 +39,7 @@ RUN pip install -r requirements.txt
 # Setup specific version of Galaxy Collection
 ARG ANSIBLE_GALAXY_VERSION
 RUN ansible-galaxy collection install community.general:==$ANSIBLE_GALAXY_VERSION
-COPY entrypoint.sh /entrypoint.sh
+COPY dockerfiles/production/entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["--version"]
