@@ -3,6 +3,7 @@
 + Add Virtualbox tags
 + Add update docker compose to update script
 + Refine update docker compose to update script
++ Move to `.devcontainer`
 
 ## 1.10.0
 + Upgrade dependencies

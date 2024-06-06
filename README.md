@@ -8,6 +8,28 @@ Docker Ansible
 | Semaphore | [![Build Status](https://sineverba.semaphoreci.com/badges/docker-ansible/branches/master.svg?style=shields&key=a831bec4-7adb-49ad-ae54-9d049cc802e9)](https://sineverba.semaphoreci.com/projects/docker-ansible) |
 | CircleCI | [![CircleCI](https://dl.circleci.com/status-badge/img/gh/sineverba/docker-ansible/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/sineverba/docker-ansible/tree/master) |
 
+## Available architectures
+
++ linux/arm64
++ linux/arm/v6
++ linux/arm/v7
+
+## Setup for development
+
+[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/sineverba/docker-cc2538-bsl)
+
+Or
+
+1. Install VSCode extension "Dev Containers"
+
+2. Clone and open up the repository in VSCode, then, you should see the following notification:
+
+![VSCode popup](./.devcontainer/folder.webp)
+
+3. Click on "Reopen in Container"
+
+4. Enjoy!
+
 
 ## Run
 
@@ -42,10 +64,3 @@ Docker Ansible
     ```
 
 3. To pass the password of sudo, append `--extra-vars 'ansible_become_pass=your-password'`
-
-## Available architectures
-
-+ linux/arm/v6
-+ linux/arm64/v7
-+ linux/arm64/v8
-+ linux/amd64

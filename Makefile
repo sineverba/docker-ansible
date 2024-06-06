@@ -7,46 +7,28 @@ ANSIBLE_GALAXY_VERSION=8.6.0
 BUILDX_VERSION=0.14.0
 BINFMT_VERSION=qemu-v8.1.5-43
 
-upgrade:
-	mkdir -p req
-	cp requirements.txt req/
-	sed -i 's/==/>=/' req/requirements.txt
-	docker run --rm -v $(PWD)/req:/usr/src/app \
-		python:$(PYTHON_VERSION)-slim-bookworm /bin/sh \
-		-c "cd /usr/src/app && pip install --upgrade pip && pip install -r requirements.txt && pip freeze > requirements.txt && cat requirements.txt"
-	# Copy requirements
-	rm -rf requirements.txt
-	cp req/requirements.txt requirements.txt
-	rm -rf req/
-	docker image rm python:$(PYTHON_VERSION)-slim-bookworm
+devbuild:
+	docker build \
+		--tag $(IMAGE_NAME):$(APP_VERSION) \
+		--file dockerfiles/development/Dockerfile \
+		"."
 
-preparemulti:
-	mkdir -vp ~/.docker/cli-plugins
-	curl \
-		-L \
-		"https://github.com/docker/buildx/releases/download/v$(BUILDX_VERSION)/buildx-v$(BUILDX_VERSION).linux-amd64" \
-		> \
-		~/.docker/cli-plugins/docker-buildx
-	chmod a+x ~/.docker/cli-plugins/docker-buildx
-	docker buildx version
-	docker run --rm --privileged tonistiigi/binfmt:$(BINFMT_VERSION) --install all
-	docker buildx ls
-	docker buildx rm multiarch
-	docker buildx create --name multiarch --driver docker-container --use
-	docker buildx inspect --bootstrap --builder multiarch
+devspin:
+	ansible-playbook \
+		-i playbook/inventory.yml \
+		playbook/test.yml \
+		-e username=user \
+		-e ansible_become_pass=password
+
+upgrade:
+	pip install --upgrade pip
+	sed -i 's/==/>=/' requirements.txt
+	pip install -r requirements.txt
+	pip freeze > requirements.txt
+	sed -i 's/>=/==/' requirements.txt
 
 build: 
 	docker build \
-		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
-		--build-arg OPEN_SSH_VERSION=$(OPEN_SSH_VERSION) \
-		--build-arg ANSIBLE_GALAXY_VERSION=$(ANSIBLE_GALAXY_VERSION) \
-		--tag $(IMAGE_NAME):$(APP_VERSION) \
-		--file Dockerfile \
-		"."
-
-multi: preparemulti
-	docker buildx build \
-		--platform linux/arm64/v8,linux/amd64,linux/arm/v6,linux/arm/v7 \
 		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
 		--build-arg OPEN_SSH_VERSION=$(OPEN_SSH_VERSION) \
 		--build-arg ANSIBLE_GALAXY_VERSION=$(ANSIBLE_GALAXY_VERSION) \
