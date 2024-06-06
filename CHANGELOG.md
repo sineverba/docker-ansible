@@ -4,6 +4,7 @@
 + Add update docker compose to update script
 + Refine update docker compose to update script
 + Move to `.devcontainer`
++ Move production Dockerfile under dockerfiles directory
 
 ## 1.10.0
 + Upgrade dependencies

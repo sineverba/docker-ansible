@@ -52,6 +52,7 @@ jobs:
               --build-arg OPENSSH_VERSION=$OPENSSH_VERSION \
               --build-arg ANSIBLE_GALAXY_VERSION=$ANSIBLE_GALAXY_VERSION \
               --tag $DOCKER_LOGIN/$DOCKER_IMAGE:cache-arm \
+              --file dockerfiles/production/Dockerfile \
               --push \
               '.'
   build_amd64:
@@ -85,6 +86,7 @@ jobs:
             --build-arg ANSIBLE_GALAXY_VERSION=$ANSIBLE_GALAXY_VERSION \
             --tag $DOCKER_LOGIN/$DOCKER_IMAGE:$CIRCLE_TAG \
             --tag $DOCKER_LOGIN/$DOCKER_IMAGE:latest \
+            --file dockerfiles/production/Dockerfile \
             --push \
             "."
   delete_cache_arm:
