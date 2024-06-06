@@ -3,8 +3,18 @@ FROM python:$PYTHON_VERSION-slim-bookworm
 # Update and upgrade
 RUN apt-get update -y && apt-get upgrade -y
 # Install requirements
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    openssh-client sshpass build-essential zlib1g-dev libssl-dev wget libpam0g-dev libselinux1-dev libkrb5-dev
+RUN DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y \
+    --no-install-recommends \
+    build-essential \
+    libssl-dev \
+    libkrb5-dev \
+    libpam0g-dev \
+    libselinux1-dev \
+    openssh-client \
+    sshpass \
+    wget \
+    zlib1g-dev
 # Upgrade openssh
 ARG OPEN_SSH_VERSION
 RUN mkdir /var/lib/sshd
