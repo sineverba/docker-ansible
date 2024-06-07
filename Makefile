@@ -2,7 +2,6 @@ IMAGE_NAME=sineverba/ansible
 CONTAINER_NAME=ansible
 APP_VERSION=1.10.0-dev
 PYTHON_VERSION=3.12.3
-ANSIBLE_GALAXY_VERSION=8.6.0
 BUILDX_VERSION=0.14.0
 BINFMT_VERSION=qemu-v8.1.5-43
 
@@ -29,7 +28,6 @@ upgrade:
 build: 
 	docker build \
 		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
-		--build-arg ANSIBLE_GALAXY_VERSION=$(ANSIBLE_GALAXY_VERSION) \
 		--tag $(IMAGE_NAME):$(APP_VERSION) \
 		--file dockerfiles/production/Dockerfile \
 		"."
@@ -96,12 +94,6 @@ test:
 		--name $(CONTAINER_NAME) \
 		$(IMAGE_NAME):$(APP_VERSION) \
 		| grep "core 2.16.6"
-	docker run --rm -it \
-		--entrypoint \
-		ansible-galaxy \
-		--name $(CONTAINER_NAME) \
-		$(IMAGE_NAME):$(APP_VERSION) \
-		collection list community.general | grep $(ANSIBLE_GALAXY_VERSION)
 
 
 destroy:
