@@ -5,6 +5,7 @@
 + Refine update docker compose to update script
 + Move to `.devcontainer`
 + Move production Dockerfile under dockerfiles directory
++ Remove update of SSH
 
 ## 1.10.0
 + Upgrade dependencies

@@ -7,7 +7,6 @@ executors:
     environment:
       DOCKER_IMAGE: ansible
       PYTHON_VERSION: 3.12.3
-      OPENSSH_VERSION: 9.7
       ANSIBLE_GALAXY_VERSION: 8.6.0
       BINFMT_VERSION: qemu-v8.1.5-43
   amd64_executor:
@@ -17,7 +16,6 @@ executors:
     environment:
       DOCKER_IMAGE: ansible
       PYTHON_VERSION: 3.12.3
-      OPENSSH_VERSION: 9.7
       ANSIBLE_GALAXY_VERSION: 8.6.0
       BINFMT_VERSION: qemu-v8.1.5-43
       DELETE_TAG_TAG: 1.0.2
@@ -49,7 +47,6 @@ jobs:
               --cache-to=type=inline \
               --platform linux/arm64,linux/arm/v6,linux/arm/v7 \
               --build-arg PYTHON_VERSION=$PYTHON_VERSION \
-              --build-arg OPENSSH_VERSION=$OPENSSH_VERSION \
               --build-arg ANSIBLE_GALAXY_VERSION=$ANSIBLE_GALAXY_VERSION \
               --tag $DOCKER_LOGIN/$DOCKER_IMAGE:cache-arm \
               --file dockerfiles/production/Dockerfile \
@@ -82,7 +79,6 @@ jobs:
             --cache-from type=registry,ref=$DOCKER_LOGIN/$DOCKER_IMAGE:cache-arm \
             --platform linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7 \
             --build-arg PYTHON_VERSION=$PYTHON_VERSION \
-            --build-arg OPENSSH_VERSION=$OPENSSH_VERSION \
             --build-arg ANSIBLE_GALAXY_VERSION=$ANSIBLE_GALAXY_VERSION \
             --tag $DOCKER_LOGIN/$DOCKER_IMAGE:$CIRCLE_TAG \
             --tag $DOCKER_LOGIN/$DOCKER_IMAGE:latest \

@@ -17,8 +17,6 @@ global_job_config:
       value: 3.12.3
     - name: ANSIBLE_GALAXY_VERSION
       value: 8.6.0
-    - name: OPEN_SSH_VERSION
-      value: "9.6"
 
 blocks:
   - name: 'Build and test'
@@ -32,7 +30,6 @@ blocks:
             - >-
               docker build 
               --build-arg PYTHON_VERSION=$PYTHON_VERSION 
-              --build-arg OPEN_SSH_VERSION=$OPEN_SSH_VERSION
               --build-arg ANSIBLE_GALAXY_VERSION=$ANSIBLE_GALAXY_VERSION
               --tag $DOCKER_USERNAME/$DOCKER_IMAGE 
               --file dockerfiles/production/Dockerfile 
@@ -59,13 +56,6 @@ blocks:
               -it 
               --name $DOCKER_IMAGE 
               $DOCKER_USERNAME/$DOCKER_IMAGE | grep "core 2.16.6"
-            - >-
-              docker run 
-              --rm 
-              -it 
-              --entrypoint ssh 
-              --name $DOCKER_IMAGE 
-              $DOCKER_USERNAME/$DOCKER_IMAGE -V | grep $OPEN_SSH_VERSION
             - >-
               docker run 
               --rm 
