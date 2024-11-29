@@ -1,5 +1,5 @@
 ---
-- hosts: desktops
+- hosts: servers
   remote_user: "{{ username }}"
   tasks:
     - name: Print all available facts

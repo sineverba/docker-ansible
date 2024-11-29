@@ -7,6 +7,7 @@ BINFMT_VERSION=qemu-v8.1.5-43
 
 devbuild:
 	docker build \
+		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
 		--tag $(IMAGE_NAME):$(APP_VERSION) \
 		--file dockerfiles/development/Dockerfile \
 		"."

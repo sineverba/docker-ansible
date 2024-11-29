@@ -1,28 +1,12 @@
-FROM python:3.12.3-slim-bookworm
-# Update and upgrade
-RUN apt-get update -y && \
-    apt-get install -y \
-    bash-completion \
-    git \
-    make \
-    openssh-client
-# Create a group and user
-ENV USER=nonroot
-ENV GROUPNAME=$USER
-ENV UID=12345
-ENV GID=23456
-
-RUN addgroup \
-    --gid "$GID" \
-    "$GROUPNAME" \
-&&  adduser \
-    --disabled-password \
-    --gecos "" \
-    --ingroup "$GROUPNAME" \
-    --uid "$UID" \
-    $USER
-# Tell docker that all future commands should run as the appuser user
-USER nonroot
-## Install requirements
+ARG PYTHON_VERSION
+FROM python:${PYTHON_VERSION}-slim-bookworm
+# Install requirements
+RUN apt-get update -y && apt-get upgrade -y
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    openssh-client sshpass build-essential zlib1g-dev libssl-dev wget libpam0g-dev libselinux1-dev libkrb5-dev
 COPY ../../requirements.txt .
 RUN pip install -r requirements.txt
+COPY dockerfiles/production/entrypoint.sh /entrypoint.sh
+RUN chmod a+x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["--version"]
