@@ -1,4 +1,0 @@
-TODO
-====
-
-+ Merge all Dockerfiles
