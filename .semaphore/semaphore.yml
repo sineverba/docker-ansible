@@ -29,7 +29,7 @@ blocks:
               docker build 
               --build-arg PYTHON_VERSION=$PYTHON_VERSION 
               --tag $DOCKER_USERNAME/$DOCKER_IMAGE 
-              --file dockerfiles/production/Dockerfile 
+              --file dockerfiles/Dockerfile 
               "."
             - >-
               docker run 

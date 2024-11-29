@@ -9,9 +9,9 @@ RUN DEBIAN_FRONTEND=noninteractive \
     openssh-client
 # Setup PIP and Ansible
 RUN pip install pip --upgrade
-COPY requirements.txt .
+COPY ../requirements.txt .
 RUN pip install -r requirements.txt
-COPY dockerfiles/production/entrypoint.sh /entrypoint.sh
+COPY dockerfiles/entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["--version"]

@@ -5,11 +5,11 @@ PYTHON_VERSION=3.12.3
 BUILDX_VERSION=0.14.0
 BINFMT_VERSION=qemu-v8.1.5-43
 
-devbuild:
+build: 
 	docker build \
 		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
 		--tag $(IMAGE_NAME):$(APP_VERSION) \
-		--file dockerfiles/development/Dockerfile \
+		--file dockerfiles/Dockerfile \
 		"."
 
 devspin:
@@ -26,12 +26,7 @@ upgrade:
 	pip freeze > requirements.txt
 	sed -i 's/>=/==/' requirements.txt
 
-build: 
-	docker build \
-		--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
-		--tag $(IMAGE_NAME):$(APP_VERSION) \
-		--file dockerfiles/production/Dockerfile \
-		"."
+
 
 inspect:
 	docker run \
