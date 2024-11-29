@@ -1,7 +1,0 @@
-{
-  "name": "docker-ansible",
-  "build": {
-    "dockerfile": "../dockerfiles/development/Dockerfile",
-    "context": ".."
-  }
-}

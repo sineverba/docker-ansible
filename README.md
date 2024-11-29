@@ -14,23 +14,6 @@ Docker Ansible
 + linux/arm/v6
 + linux/arm/v7
 
-## Setup for development
-
-[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/sineverba/docker-cc2538-bsl)
-
-Or
-
-1. Install VSCode extension "Dev Containers"
-
-2. Clone and open up the repository in VSCode, then, you should see the following notification:
-
-![VSCode popup](./.devcontainer/folder.webp)
-
-3. Click on "Reopen in Container"
-
-4. Enjoy!
-
-
 ## Run
 
 1. (If needed) setup `openssh-server`

@@ -7,6 +7,7 @@
 + Move production Dockerfile under dockerfiles directory
 + Remove update of SSH
 + Remove Ansible Galaxy custom version
++ Remove devcontainer
 
 ## 1.10.0
 + Upgrade dependencies
