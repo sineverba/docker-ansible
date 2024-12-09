@@ -10,9 +10,9 @@ RUN DEBIAN_FRONTEND=noninteractive \
     python3-dev \
     musl-dev \
     build-essential \
-    curl && \
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
-    export PATH="/root/.cargo/bin:$PATH" && \
+    curl \
+    rustc \
+    cargo && \
     rm -rf /var/lib/apt/lists/*
 # Setup PIP and Ansible
 RUN pip install pip --upgrade
