@@ -4,13 +4,15 @@ FROM python:$PYTHON_VERSION-slim-bookworm
 RUN apt-get update -y && apt-get upgrade -y
 # Install requirements
 RUN DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y \
-    --no-install-recommends \
+    apt-get install -y --no-install-recommends \
     gcc \
     libffi-dev \
     python3-dev \
     musl-dev \
-    build-essential && \
+    build-essential \
+    curl && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
+    export PATH="/root/.cargo/bin:$PATH" && \
     rm -rf /var/lib/apt/lists/*
 # Setup PIP and Ansible
 RUN pip install pip --upgrade
