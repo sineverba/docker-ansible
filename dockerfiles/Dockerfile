@@ -5,14 +5,16 @@ RUN apt-get update -y && apt-get upgrade -y
 # Install requirements
 RUN DEBIAN_FRONTEND=noninteractive \
     apt-get install -y --no-install-recommends \
+    build-essential \
+    cargo \
+    curl \
     gcc \
     libffi-dev \
-    python3-dev \
+    libssl-dev && \
     musl-dev \
-    build-essential \
-    curl \
-    rustc \
-    cargo && \
+    pkg-config \
+    python3-dev \
+    rustc && \
     rm -rf /var/lib/apt/lists/*
 # Setup PIP and Ansible
 RUN pip install pip --upgrade
