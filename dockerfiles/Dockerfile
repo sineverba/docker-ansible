@@ -8,8 +8,10 @@ RUN DEBIAN_FRONTEND=noninteractive \
     --no-install-recommends \
     gcc \
     libffi-dev \
-    openssh-client \
-    python3-dev
+    python3-dev \
+    musl-dev \
+    build-essential && \
+    rm -rf /var/lib/apt/lists/*
 # Setup PIP and Ansible
 RUN pip install pip --upgrade
 COPY ../requirements.txt .
