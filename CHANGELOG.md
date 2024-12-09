@@ -1,4 +1,7 @@
-# 1.11.0
+# 1.11.1
++ Fix deploy
+
+## 1.11.0
 + Upgrade dependencies
 + Add Virtualbox tags
 + Add update docker compose to update script
