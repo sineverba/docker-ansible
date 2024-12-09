@@ -1,4 +1,16 @@
-# 1.10.0
+# 1.11.0
++ Upgrade dependencies
++ Add Virtualbox tags
++ Add update docker compose to update script
++ Refine update docker compose to update script
++ Move to `.devcontainer`
++ Move production Dockerfile under dockerfiles directory
++ Remove update of SSH
++ Remove Ansible Galaxy custom version
++ Remove devcontainer
++ Merge all dockerfiles
+
+## 1.10.0
 + Upgrade dependencies
 + Upgrade dependencies
 

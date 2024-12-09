@@ -11,3 +11,6 @@
     - name: Print architecture
       debug:
         var: ansible_facts['architecture']
+    - name: Print version
+      debug:
+        var: ansible_facts['lsb']['release']

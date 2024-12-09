@@ -2,9 +2,9 @@
 - hosts: desktops
   remote_user: "{{ username }}"
   vars:
-    dockercompose_version: 2.24.0
+    dockercompose_version: 2.27.0
     nvm_version: 0.39.7
-    openfortigui_version: 0.9.8-1
+    openfortigui_version: 0.9.10-1
     virtualbox_version: 7.0
   tasks:
     - name: Copy SSH keys id_ed25519
@@ -59,18 +59,24 @@
       ansible.builtin.apt_key:  
         url: https://www.virtualbox.org/download/oracle_vbox_2016.asc
         state: present
+      tags:
+        - virtualbox
     - name: Add Oracle Repository (Not Ubuntu 22.04)
       become: yes
       when: ansible_facts['lsb']['release'] != "23.04"
       ansible.builtin.apt_repository:
         repo: "deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian {{ ansible_distribution_release }} contrib"
         state: present
+      tags:
+        - virtualbox
     - name: Add Oracle Repository (on Ubuntu 23.04)
       become: yes
       when: ansible_facts['lsb']['release'] == "23.04"
       ansible.builtin.apt_repository:
         repo: "deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian jammy contrib"
         state: present
+      tags:
+        - virtualbox
     - name: Update and upgrade apt packages
       become: yes
       apt:
@@ -82,6 +88,46 @@
         dest: /home/{{ username }}/update.sh
         content: |
           #!/bin/bash
+          # Funzione per ottenere la versione installata di Docker Compose
+          get_installed_version() {
+            if [ -x "/usr/local/lib/docker/cli-plugins/docker-compose" ]; then
+              INSTALLED_VERSION=$(/usr/local/lib/docker/cli-plugins/docker-compose --version | grep -oP "\d+\.\d+\.\d+")
+            else
+              INSTALLED_VERSION="none"
+            fi
+          }
+          
+          # Ottieni la versione più recente di Docker Compose
+          LATEST_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
+          
+          # Rimuovi la 'v' dalla versione più recente, se presente
+          LATEST_VERSION=${LATEST_VERSION#v}
+          
+          # Ottieni l'architettura e il sistema operativo della macchina
+          ARCH=$(uname -m)
+          OS=$(uname | tr '[:upper:]' '[:lower:]')
+          
+          # Se il sistema è MacOS, cambia l'OS in "darwin"
+          if [ "$OS" = "darwin" ]; then
+            OS="darwin"
+          fi
+          
+          # Costruisci l'URL per il download di Docker Compose
+          URL="https://github.com/docker/compose/releases/download/v${LATEST_VERSION}/docker-compose-${OS}-${ARCH}"
+          
+          # Ottieni la versione installata di Docker Compose
+          get_installed_version
+          
+          # Confronta le versioni e scarica la nuova versione solo se è diversa da quella installata
+          if [ "$INSTALLED_VERSION" != "$LATEST_VERSION" ]; then
+            echo "Updating Docker Compose from version $INSTALLED_VERSION to $LATEST_VERSION"
+            curl -L $URL -o /usr/local/lib/docker/cli-plugins/docker-compose
+            chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+            echo "Docker Compose updated to version $LATEST_VERSION"
+          else
+            echo "Docker Compose is already up-to-date (version $INSTALLED_VERSION)"
+          fi
+          # Update system
           apt update -y && \
           apt-get update -y && \
           apt-get upgrade -y && \
@@ -105,10 +151,17 @@
           - make
           - openssh-server
           - perl
-          - virtualbox-guest-additions-iso
-          - virtualbox-guest-x11
           - wireguard
         state: latest
+    - name: Install Virtualbox
+      become: yes
+      apt:
+        name:
+          - virtualbox-guest-additions-iso
+          - virtualbox-guest-x11
+        state: latest
+      tags:
+        - virtualbox
     - name: Install FUSE2 (on Ubuntu 22.04)
       become: yes
       when: ansible_facts['lsb']['release'] == "22.04"
@@ -121,6 +174,8 @@
       apt:
         name:
           - virtualbox-{{ virtualbox_version }}
+      tags:
+        - virtualbox
     - name: Install OpenFortiGUI dependency
       become: yes
       apt:
