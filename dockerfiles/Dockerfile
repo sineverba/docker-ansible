@@ -10,7 +10,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
     curl \
     gcc \
     libffi-dev \
-    libssl-dev && \
+    libssl-dev \
     musl-dev \
     pkg-config \
     python3-dev \
