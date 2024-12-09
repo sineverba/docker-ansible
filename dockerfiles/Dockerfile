@@ -6,7 +6,10 @@ RUN apt-get update -y && apt-get upgrade -y
 RUN DEBIAN_FRONTEND=noninteractive \
     apt-get install -y \
     --no-install-recommends \
-    openssh-client
+    gcc \
+    libffi-dev \
+    openssh-client \
+    python3-dev
 # Setup PIP and Ansible
 RUN pip install pip --upgrade
 COPY ../requirements.txt .
