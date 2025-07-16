@@ -12,6 +12,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
     libffi-dev \
     libssl-dev \
     musl-dev \
+    openssh-client \
     pkg-config \
     python3-cryptography \
     python3-cffi \
