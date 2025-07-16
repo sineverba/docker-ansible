@@ -2,10 +2,9 @@
 - hosts: desktops
   remote_user: "{{ username }}"
   vars:
-    dockercompose_version: 2.27.0
-    nvm_version: 0.39.7
+    dockercompose_version: 2.38.2
+    nvm_version: 0.40.3
     openfortigui_version: 0.9.10-1
-    virtualbox_version: 7.0
   tasks:
     - name: Copy SSH keys id_ed25519
       ignore_errors: yes
@@ -169,13 +168,6 @@
         name:
           - libfuse2
         state: latest
-    - name: Install VirtualBox
-      become: yes
-      apt:
-        name:
-          - virtualbox-{{ virtualbox_version }}
-      tags:
-        - virtualbox
     - name: Install OpenFortiGUI dependency
       become: yes
       apt:

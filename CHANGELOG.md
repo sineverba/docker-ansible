@@ -1,5 +1,6 @@
 # Next version
 + Upgrade dependencies
++ Refactor playbooks
 
 ## 1.11.6
 + Fix deploy
