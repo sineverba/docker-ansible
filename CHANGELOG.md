@@ -1,4 +1,7 @@
-# 1.11.6
+# Next version
++ Upgrade dependencies
+
+## 1.11.6
 + Fix deploy
 
 ## 1.11.5

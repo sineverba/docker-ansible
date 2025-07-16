@@ -1,9 +1,7 @@
 IMAGE_NAME=sineverba/ansible
 CONTAINER_NAME=ansible
 APP_VERSION=1.11.6-dev
-PYTHON_VERSION=3.12.3
-BUILDX_VERSION=0.14.0
-BINFMT_VERSION=qemu-v8.1.5-43
+PYTHON_VERSION=3.13.5
 
 build: 
 	docker build \
@@ -20,13 +18,20 @@ devspin:
 		-e ansible_become_pass=password
 
 upgrade:
-	pip install --upgrade pip
-	sed -i 's/==/>=/' requirements.txt
-	pip install -r requirements.txt
-	pip freeze > requirements.txt
-	sed -i 's/>=/==/' requirements.txt
-
-
+	docker run \
+		--rm \
+		-it \
+		--entrypoint /bin/bash \
+		--name $(CONTAINER_NAME) \
+		-v "$(PWD):/app" \
+		$(IMAGE_NAME):$(APP_VERSION) \
+		-c "cd app & \
+		pip install --upgrade pip \
+		&& pip list --outdated \
+		&& sed -i 's/==/>=/' /app/requirements.txt \
+		&& pip install -r /app/requirements.txt --upgrade \
+		&& pip freeze > /app/requirements.txt \
+		&& sed -i 's/>=/==/' /app/requirements.txt"
 
 inspect:
 	docker run \
@@ -89,7 +94,7 @@ test:
 	docker run --rm -it \
 		--name $(CONTAINER_NAME) \
 		$(IMAGE_NAME):$(APP_VERSION) \
-		| grep "core 2.16.6"
+		| grep "core 2.18.7"
 
 
 destroy:
