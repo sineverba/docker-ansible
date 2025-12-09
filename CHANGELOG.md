@@ -1,4 +1,7 @@
-# 1.12.1
+# 1.12.2
++ Fix ARM deploy
+
+## 1.12.1
 + Fix ARM deploy
 
 ## 1.12.0
