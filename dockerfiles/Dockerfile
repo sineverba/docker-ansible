@@ -1,4 +1,4 @@
-ARG PYTHON_VERSION=3.13.5
+ARG PYTHON_VERSION=3.14.2
 FROM python:$PYTHON_VERSION-slim-bookworm
 # Update and upgrade
 RUN apt-get update -y && apt-get upgrade -y

@@ -14,7 +14,7 @@ global_job_config:
     - name: DOCKER_IMAGE
       value: ansible
     - name: PYTHON_VERSION
-      value: 3.13.5
+      value: 3.14.2
 
 blocks:
   - name: 'Build and test'
