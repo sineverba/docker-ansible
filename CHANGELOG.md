@@ -1,4 +1,7 @@
-# 1.12.3
+# Next version
++ Remove other platforms, only AMD/Intel
+
+## 1.12.3
 + Fix ARM deploy
 
 ## 1.12.2
