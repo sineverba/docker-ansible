@@ -1,9 +1,8 @@
 IMAGE_NAME=sineverba/ansible
 CONTAINER_NAME=ansible
-APP_VERSION=1.11.6-dev
-PYTHON_VERSION=3.12.3
-BUILDX_VERSION=0.14.0
-BINFMT_VERSION=qemu-v8.1.5-43
+APP_VERSION=1.12.0
+PYTHON_VERSION=3.14.2
+PIP_VERSION=25.3
 
 build: 
 	docker build \
@@ -19,14 +18,35 @@ devspin:
 		-e username=user \
 		-e ansible_become_pass=password
 
+# Get latest available pip version
+get-latest-pip:
+	@echo "Checking latest available pip version..."
+	@LATEST_PIP=$$(docker run --rm python:$(PYTHON_VERSION)-alpine3.22 /bin/sh -c "pip install --upgrade pip > /dev/null 2>&1 && pip --version | awk '{print \$$2}'"); \
+	echo "Latest pip version: $$LATEST_PIP"
+
+# Update PIP_VERSION variable in Makefile using the latest version
+update-pip-version:
+	@echo "Updating PIP_VERSION in Makefile..."
+	@LATEST_PIP=$$($(MAKE) --no-print-directory get-latest-pip | grep "Latest pip version:" | cut -d' ' -f4); \
+	echo "Updating from $(PIP_VERSION) to $$LATEST_PIP"; \
+	sed -i "s/^PIP_VERSION=.*/PIP_VERSION=$$LATEST_PIP/" Makefile; \
+	echo "PIP_VERSION updated to $$LATEST_PIP"
+
 upgrade:
-	pip install --upgrade pip
-	sed -i 's/==/>=/' requirements.txt
-	pip install -r requirements.txt
-	pip freeze > requirements.txt
-	sed -i 's/>=/==/' requirements.txt
-
-
+	docker run \
+		--rm \
+		-it \
+		--entrypoint /bin/bash \
+		--name $(CONTAINER_NAME) \
+		-v "$(PWD):/app" \
+		$(IMAGE_NAME):$(APP_VERSION) \
+		-c "cd app & \
+		pip install pip==$(PIP_VERSION) \
+		&& pip list --outdated \
+		&& sed -i 's/==/>=/' /app/requirements.txt \
+		&& pip install -r /app/requirements.txt --upgrade \
+		&& pip freeze > /app/requirements.txt \
+		&& sed -i 's/>=/==/' /app/requirements.txt"
 
 inspect:
 	docker run \
@@ -89,7 +109,7 @@ test:
 	docker run --rm -it \
 		--name $(CONTAINER_NAME) \
 		$(IMAGE_NAME):$(APP_VERSION) \
-		| grep "core 2.16.6"
+		| grep "core 2.20.0"
 
 
 destroy:

@@ -1,4 +1,4 @@
-ARG PYTHON_VERSION=3.12.3
+ARG PYTHON_VERSION=3.14.2
 FROM python:$PYTHON_VERSION-slim-bookworm
 # Update and upgrade
 RUN apt-get update -y && apt-get upgrade -y
@@ -12,13 +12,16 @@ RUN DEBIAN_FRONTEND=noninteractive \
     libffi-dev \
     libssl-dev \
     musl-dev \
+    openssh-client \
     pkg-config \
+    python3-cryptography \
+    python3-cffi \
     python3-dev \
     rustc && \
     rm -rf /var/lib/apt/lists/*
 # Setup PIP and Ansible
 RUN pip install pip --upgrade
-COPY ../requirements.txt .
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY dockerfiles/entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
