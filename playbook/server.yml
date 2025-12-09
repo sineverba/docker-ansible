@@ -3,7 +3,7 @@
   remote_user: "{{ username }}"
   vars:
     ansible_python_interpreter: /usr/bin/python3
-    dockercompose_version: 2.38.2
+    dockercompose_version: 5.0.0
     
   tasks:
     - name: Hardening SSH Server - PasswordAuthentication no
