@@ -1,4 +1,7 @@
-# 1.12.0
+# 1.12.1
++ Fix ARM deploy
+
+## 1.12.0
 + Upgrade dependencies
 + Refactor playbooks
 + Upgrade dependencies
