@@ -1,8 +1,8 @@
 IMAGE_NAME=sineverba/ansible
 CONTAINER_NAME=ansible
 APP_VERSION=2.0.0
-PYTHON_VERSION=3.14.2
-PIP_VERSION=25.3
+PYTHON_VERSION=3.14.4
+PIP_VERSION=26.0.1
 
 build: 
 	docker build \
