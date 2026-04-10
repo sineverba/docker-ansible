@@ -109,7 +109,7 @@ test:
 	docker run --rm -it \
 		--name $(CONTAINER_NAME) \
 		$(IMAGE_NAME):$(APP_VERSION) \
-		| grep "core 2.20.0"
+		| grep "core 2.20.4"
 
 
 destroy:
