@@ -1,43 +1,66 @@
 Docker Ansible
 ==============
-
-> Docker image to use Ansible without install it
+> Docker image to use Ansible without installing it
 
 | CI / CD | Status |
 | ------- | ------ |
 | Semaphore | [![Build Status](https://sineverba.semaphoreci.com/badges/docker-ansible/branches/master.svg?style=shields&key=a831bec4-7adb-49ad-ae54-9d049cc802e9)](https://sineverba.semaphoreci.com/projects/docker-ansible) |
 | CircleCI | [![CircleCI](https://dl.circleci.com/status-badge/img/gh/sineverba/docker-ansible/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/sineverba/docker-ansible/tree/master) |
 
-## Run
+## Available playbooks
 
-1. (If needed) setup `openssh-server`
+| Playbook | Description |
+| -------- | ----------- |
+| `desktop.yml` | Setup desktop environment |
+| `server.yml` | Setup server environment |
+| `ollama.yml` | Install / uninstall Ollama (use `--tags install` or `--tags uninstall`) |
+| `test.yml` | Print system facts (for testing) |
 
-	`# apt-get install openssh-server`
+## Setup
 
-1. Copy your ssh keys into destination servers / desktops
+1. Install `openssh-server` on target machine
 
-    `ssh-copy-id -i /home/sineverba/.ssh/id_ed25519.pub sineverba@192.168.1.32`
+        apt-get install openssh-server
 
+2. Copy your SSH key to target
 
-2. Be sure that you can log to the server / desktop without password
+        ssh-copy-id -i ~/.ssh/id_ed25519.pub user@192.168.1.32
 
-    `ssh user@192.168.1.32`
+3. Verify passwordless login
 
-3. Launch Ansible with
+        ssh user@192.168.1.32
 
-    ```shell
-    docker run \
-	--rm -it \
-	-v ${pwd}/playbook:/playbook:ro \
-	-v ~/.ssh:/ssh:ro \
-	--name ansible \
-	sineverba/ansible:2.0.0 \
-	# -v or -vvv or -vvvv for debug
-	# --skip-tags "pihole" \ # Add --skip-tags to skip tags, in the form of --skip-tags "a,b,c"
-	-i /playbook/inventory.yml \
-	/playbook/desktop.yml \ # select your playbook
-	-e username=user \ # select your username
-	-e ansible_become_pass=yourRootPasswordHere # your root passwd
-    ```
+## Usage
 
-3. To pass the password of sudo, append `--extra-vars 'ansible_become_pass=your-password'`
+### Generic
+
+```shell
+docker run \
+    --rm -it \
+    -v $(PWD)/playbook:/playbook:ro \
+    -v ~/.ssh:/ssh:ro \
+    --name ansible \
+    sineverba/ansible:2.0.0 \
+    -i /playbook/inventory.yml \
+    /playbook/desktop.yml \
+    -e username=user \
+    -e ansible_become_pass=password
+```
+
+Options:
+- `-v` / `-vvv` / `-vvvv` for debug verbosity
+- `--skip-tags "a,b,c"` to skip specific tags
+
+### Make targets
+
+| Target | Description |
+| ------ | ----------- |
+| `make build` | Build the Docker image |
+| `make playtest` | Run test playbook on localhost |
+| `make desktop` | Run desktop playbook |
+| `make server` | Run server playbook |
+| `make ollama-install` | Install Ollama on target |
+| `make ollama-uninstall` | Uninstall Ollama from target |
+| `make inspect` | Shell into the container |
+| `make upgrade` | Upgrade Python dependencies |
+| `make destroy` | Cleanup images and cache |

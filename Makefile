@@ -112,6 +112,33 @@ test:
 		| grep "core 2.20.4"
 
 
+ollama-install:
+	docker run \
+	--rm -it \
+	-v $(PWD)/playbook:/playbook:ro \
+	-v ~/.ssh:/ssh:ro \
+	--name $(CONTAINER_NAME) \
+	$(IMAGE_NAME):$(APP_VERSION) \
+	-i /playbook/inventory.yml \
+	/playbook/ollama.yml \
+	--tags install \
+	-e username=sineverba \
+	-e ansible_become_pass=password
+
+ollama-install:
+	docker run \
+	--rm -it \
+	-v $(PWD)/playbook:/playbook:ro \
+	-v ~/.ssh:/ssh:ro \
+	--name $(CONTAINER_NAME) \
+	$(IMAGE_NAME):$(APP_VERSION) \
+	-i /playbook/inventory.yml \
+	/playbook/ollama.yml \
+	--tags uninstall \
+	-e username=sineverba \
+	-e ansible_become_pass=password
+
+
 destroy:
 	# Remove all images with no current tag
 	docker rmi $$(docker images $(IMAGE_NAME):* --format "{{.Repository}}:{{.Tag}}" | grep -v '$(APP_VERSION)') || exit 0;
