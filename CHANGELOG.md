@@ -1,4 +1,7 @@
-# 2.0.0
+# Next version
++ Upgrade dependencies
+
+## 2.0.0
 + Remove other platforms, only AMD/Intel
 
 ## 1.12.3

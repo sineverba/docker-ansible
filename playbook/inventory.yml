@@ -26,6 +26,8 @@ all:
 #    localhost:
 #    192.168.1.100:
     192.168.1.105:
+    localhost:
+      ansible_connection: local
 
 desktops:
   hosts:
