@@ -1,6 +1,7 @@
 # Next version
 + Upgrade dependencies
 + Add Ollama install
++ Upgrade dependencies
 
 ## 2.0.0
 + Remove other platforms, only AMD/Intel
