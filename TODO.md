@@ -1,7 +1,6 @@
 TODO
 ====
 
-+ Refactor update script on desktop / server playbook
 + Remove unnecessary step on playbook
 + Simplify inventory
 + Merge server / desktop playbook
@@ -9,3 +8,4 @@ TODO
 + Refactor upgrade dependencies
 + Add claude to desktop / server
 + Refactor Makefile
++ Remove Firefox via snap
