@@ -1,8 +1,8 @@
 IMAGE_NAME=sineverba/ansible
 CONTAINER_NAME=ansible
-APP_VERSION=2.0.0
-PYTHON_VERSION=3.14.4
-PIP_VERSION=26.0.1
+APP_VERSION=2.1.0-rc.1
+PYTHON_VERSION=3.14.5
+PIP_VERSION=26.1.2
 
 build: 
 	docker build \
@@ -11,17 +11,10 @@ build:
 		--file dockerfiles/Dockerfile \
 		"."
 
-devspin:
-	ansible-playbook \
-		-i playbook/inventory.yml \
-		playbook/test.yml \
-		-e username=user \
-		-e ansible_become_pass=password
-
 # Get latest available pip version
 get-latest-pip:
 	@echo "Checking latest available pip version..."
-	@LATEST_PIP=$$(docker run --rm python:$(PYTHON_VERSION)-alpine3.22 /bin/sh -c "pip install --upgrade pip > /dev/null 2>&1 && pip --version | awk '{print \$$2}'"); \
+	@LATEST_PIP=$$(docker run --rm python:$(PYTHON_VERSION)-alpine3.23 /bin/sh -c "pip install --upgrade pip > /dev/null 2>&1 && pip --version | awk '{print \$$2}'"); \
 	echo "Latest pip version: $$LATEST_PIP"
 
 # Update PIP_VERSION variable in Makefile using the latest version
@@ -48,12 +41,23 @@ upgrade:
 		&& pip freeze > /app/requirements.txt \
 		&& sed -i 's/>=/==/' /app/requirements.txt"
 
-inspect:
-	docker run \
-	--rm -it \
-	--entrypoint /bin/bash \
-	--name $(CONTAINER_NAME) \
-	$(IMAGE_NAME):$(APP_VERSION)
+test:
+	docker run --rm -it \
+		--entrypoint \
+		cat \
+		--name $(CONTAINER_NAME) \
+		$(IMAGE_NAME):$(APP_VERSION) \
+		/etc/os-release | grep "Debian GNU/Linux 12 (bookworm)"
+	docker run --rm -it \
+		--entrypoint \
+		python \
+		--name $(CONTAINER_NAME) \
+		$(IMAGE_NAME):$(APP_VERSION) \
+		--version | grep $(PYTHON_VERSION)
+	docker run --rm -it \
+		--name $(CONTAINER_NAME) \
+		$(IMAGE_NAME):$(APP_VERSION) \
+		| grep "core 2.21.0"
 
 playtest:
 	docker run \
@@ -92,59 +96,3 @@ server:
 	/playbook/server.yml \
 	-e username=user \
 	-e ansible_become_pass=password
-
-test:
-	docker run --rm -it \
-		--entrypoint \
-		cat \
-		--name $(CONTAINER_NAME) \
-		$(IMAGE_NAME):$(APP_VERSION) \
-		/etc/os-release | grep "Debian GNU/Linux 12 (bookworm)"
-	docker run --rm -it \
-		--entrypoint \
-		python \
-		--name $(CONTAINER_NAME) \
-		$(IMAGE_NAME):$(APP_VERSION) \
-		--version | grep $(PYTHON_VERSION)
-	docker run --rm -it \
-		--name $(CONTAINER_NAME) \
-		$(IMAGE_NAME):$(APP_VERSION) \
-		| grep "core 2.20.4"
-
-
-ollama-install:
-	docker run \
-	--rm -it \
-	-v $(PWD)/playbook:/playbook:ro \
-	-v ~/.ssh:/ssh:ro \
-	--name $(CONTAINER_NAME) \
-	$(IMAGE_NAME):$(APP_VERSION) \
-	-i /playbook/inventory.yml \
-	/playbook/ollama.yml \
-	--tags install \
-	-e username=sineverba \
-	-e ansible_become_pass=password
-
-ollama-install:
-	docker run \
-	--rm -it \
-	-v $(PWD)/playbook:/playbook:ro \
-	-v ~/.ssh:/ssh:ro \
-	--name $(CONTAINER_NAME) \
-	$(IMAGE_NAME):$(APP_VERSION) \
-	-i /playbook/inventory.yml \
-	/playbook/ollama.yml \
-	--tags uninstall \
-	-e username=sineverba \
-	-e ansible_become_pass=password
-
-
-destroy:
-	# Remove all images with no current tag
-	docker rmi $$(docker images $(IMAGE_NAME):* --format "{{.Repository}}:{{.Tag}}" | grep -v '$(APP_VERSION)') || exit 0;
-	# Remove all python images
-	docker rmi $$(docker images python --format "{{.Repository}}:{{.Tag}}") || exit 0;
-	# Remove all dangling images
-	docker rmi $$(docker images -f "dangling=true" -q) || exit 0;
-	# Remove cached builder
-	docker builder prune -f
