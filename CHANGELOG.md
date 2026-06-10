@@ -2,6 +2,7 @@
 + Upgrade dependencies
 + Add Ollama install
 + Upgrade dependencies
++ Refactor Dockerfile
 
 ## 2.0.0
 + Remove other platforms, only AMD/Intel
