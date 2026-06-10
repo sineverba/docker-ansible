@@ -5,6 +5,7 @@
 + Refactor Dockerfile
 + Estratto script update
 + Refactor update script
++ Refactor desktop - server files
 
 ## 2.0.0
 + Remove other platforms, only AMD/Intel
