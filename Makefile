@@ -67,7 +67,7 @@ playtest:
 	--name $(CONTAINER_NAME) \
 	$(IMAGE_NAME):$(APP_VERSION) \
 	-i /playbook/inventory.yml \
-	/playbook/test.yml \
+	/playbook/utils/test.yml \
 	-e username=user \
 	-e ansible_become_pass=password
 
@@ -80,7 +80,7 @@ desktop:
 	$(IMAGE_NAME):$(APP_VERSION) \
 	--skip-tags "virtualbox" \
 	-i /playbook/inventory.yml \
-	/playbook/desktop.yml \
+	/playbook/base/desktop.yml \
 	-e username=user \
 	-e ansible_become_pass=password
 
@@ -91,8 +91,19 @@ server:
 	-v ~/.ssh:/ssh:ro \
 	--name $(CONTAINER_NAME) \
 	$(IMAGE_NAME):$(APP_VERSION) \
-	--skip-tags "pihole" \
 	-i /playbook/inventory.yml \
-	/playbook/server.yml \
+	/playbook/base/server.yml \
+	-e username=user \
+	-e ansible_become_pass=password
+
+pihole:
+	docker run \
+	--rm -it \
+	-v $(PWD)/playbook:/playbook:ro \
+	-v ~/.ssh:/ssh:ro \
+	--name $(CONTAINER_NAME) \
+	$(IMAGE_NAME):$(APP_VERSION) \
+	-i /playbook/inventory.yml \
+	/playbook/services/pihole.yml \
 	-e username=user \
 	-e ansible_become_pass=password
