@@ -13,7 +13,7 @@ Docker Ansible
 | -------- | ----------- |
 | `desktop.yml` | Setup desktop environment |
 | `server.yml` | Setup server environment |
-| `ollama.yml` | Install / uninstall Ollama (use `--tags install` or `--tags uninstall`) |
+| `pihole.yml` | Configure DNS for PiHole (run after `server.yml`) |
 | `test.yml` | Print system facts (for testing) |
 
 ## Setup
@@ -42,7 +42,7 @@ docker run \
     --name ansible \
     sineverba/ansible:2.0.0 \
     -i /playbook/inventory.yml \
-    /playbook/desktop.yml \
+    /playbook/base/desktop.yml \
     -e username=user \
     -e ansible_become_pass=password
 ```
@@ -56,11 +56,11 @@ Options:
 | Target | Description |
 | ------ | ----------- |
 | `make build` | Build the Docker image |
+| `make test` | Run image smoke tests |
 | `make playtest` | Run test playbook on localhost |
 | `make desktop` | Run desktop playbook |
 | `make server` | Run server playbook |
-| `make ollama-install` | Install Ollama on target |
-| `make ollama-uninstall` | Uninstall Ollama from target |
-| `make inspect` | Shell into the container |
+| `make pihole` | Configure DNS for PiHole |
 | `make upgrade` | Upgrade Python dependencies |
-| `make destroy` | Cleanup images and cache |
+| `make get-latest-pip` | Print latest available pip version |
+| `make update-pip-version` | Update `PIP_VERSION` in Makefile to latest |

@@ -1,0 +1,31 @@
+---
+- hosts: servers
+  remote_user: "{{ username }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    pihole_upstream_dns: 8.8.8.8
+
+  tasks:
+    - name: Replace DNS for PiHole
+      become: yes
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/resolved.conf
+        regexp: '^#DNS='
+        line: DNS={{ pihole_upstream_dns }}
+    - name: Replace DNSStubListener for PiHole
+      become: yes
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/resolved.conf
+        regexp: '^#DNSStubListener='
+        line: DNSStubListener=no
+    - name: Remove symlink for PiHole
+      become: yes
+      file:
+        path: /run/systemd/resolve/resolv.conf
+        state: absent
+    - name: Add symlink for PiHole
+      become: yes
+      file:
+        src: /etc/resolv.conf
+        dest: /run/systemd/resolve/resolv.conf
+        state: link

@@ -1,9 +1,8 @@
 TODO
 ====
 
-+ Refactor server file
-+ Simplify inventory
 + Merge server / desktop playbook
++ Simplify inventory
 + Simplify Makefile with env ? to no comment // uncomment
 + Refactor upgrade dependencies
 + Add claude to desktop / server
