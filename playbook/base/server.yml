@@ -17,6 +17,7 @@
         - { regexp: '^#?\s*PasswordAuthentication\s', line: 'PasswordAuthentication no' }
         - { regexp: '^#?\s*PermitRootLogin\s', line: 'PermitRootLogin no' }
       failed_when: false
+
     - name: Disable auto update
       become: yes
       copy:
@@ -26,59 +27,12 @@
           APT::Periodic::Download-Upgradeable-Packages "0";
           APT::Periodic::AutocleanInterval "0";
           APT::Periodic::Unattended-Upgrade "0";
-    - name: Remove dependencies
-      become: yes
-      apt:
-        name:
-          - brltty
-        state: absent
-        purge: yes
-    - name: Update and upgrade apt packages
-      become: yes
-      apt:
-        upgrade: yes
-        update_cache: yes
-        cache_valid_time: 86400
-    - name: Create update shell command file
-      copy:
-        src: files/update.sh
-        dest: /home/{{ username }}/update.sh
-        mode: a+x
-    - name: Install dependencies
+
+    - import_tasks: common.yml
+
+    - name: Install server software
       become: yes
       apt:
         name:
           - build-essential
-          - curl
-          - docker.io
-          - git
-          - linux-headers-{{ ansible_facts['kernel'] }}
-          - openssh-server
         state: present
-    - name: Enable and start Docker service
-      become: yes
-      ansible.builtin.systemd:
-        name: docker
-        enabled: yes
-        state: started
-    - name: Create folder for docker compose
-      become: yes
-      file:
-        path: /usr/local/lib/docker/cli-plugins
-        state: directory
-    - name: Download Docker Compose
-      become: yes
-      get_url:
-        url: https://github.com/docker/compose/releases/download/v{{ dockercompose_version }}/docker-compose-linux-{{ ansible_facts['architecture'] }}
-        dest: /usr/local/lib/docker/cli-plugins/docker-compose
-    - name: Assign permissions to Docker Compose
-      become: yes
-      file:
-        dest: /usr/local/lib/docker/cli-plugins/docker-compose
-        mode: a+x
-    - name: Add current user to docker group
-      become: yes
-      user:
-        name: "{{ username }}"
-        groups: docker
-        append: yes

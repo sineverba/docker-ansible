@@ -8,6 +8,7 @@
 + Refactor desktop - server files
 + Refactor server playbook
 + Extract PiHole configuration into dedicated playbook
++ Extract common tasks into shared task file
 
 ## 2.0.0
 + Remove other platforms, only AMD/Intel

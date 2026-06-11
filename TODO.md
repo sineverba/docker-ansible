@@ -1,7 +1,6 @@
 TODO
 ====
 
-+ Merge server / desktop playbook
 + Simplify inventory
 + Simplify Makefile with env ? to no comment // uncomment
 + Refactor upgrade dependencies
