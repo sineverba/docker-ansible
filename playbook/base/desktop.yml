@@ -6,62 +6,36 @@
     nvm_version: 0.40.3
     openfortigui_version: 0.9.10-1
   tasks:
-    - name: Remove dependencies
+    - import_tasks: common.yml
+
+    - name: Install desktop software
       become: yes
       apt:
         name:
-          - brltty
-        state: absent
-        purge: yes
-    - name: Update and upgrade apt packages
-      become: yes
-      apt:
-        upgrade: yes
-        update_cache: yes
-        cache_valid_time: 86400
-    - name: Create update shell command file
-      copy:
-        src: files/update.sh
-        dest: /home/{{ username }}/update.sh
-        mode: a+x
-    - name: Install software
-      become: yes
-      apt:
-        name:
-          - curl
-          - docker.io
-          - git
-          - linux-headers-{{ ansible_facts['kernel'] }}
           - make
-          - openssh-server
         state: latest
+
     - name: Install OpenFortiGUI dependency
       become: yes
       apt:
         deb: http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb
+
     - name: Install OpenFortiGUI
       become: yes
       apt:
         deb: https://apt.iteas.at/iteas/pool/main/o/openfortigui/openfortigui_{{ openfortigui_version }}_amd64_focal.deb
+
     - name: Install Google Chrome
       become: yes
       apt:
         deb: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    - name: Enable Docker service
-      become: yes
-      ansible.builtin.systemd:
-        name: docker
-        enabled: yes
-    - name: Start Docker service
-      become: yes
-      ansible.builtin.systemd:
-        name: docker
-        state: started
+
     - name: Create docker service directory
       become: yes
       file:
         path: /etc/systemd/system/docker.service.d
         state: directory
+
     - name: Setup API Docker
       become: yes
       copy:
@@ -70,47 +44,34 @@
           [Service]
           ExecStart=
           ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375
+
     - name: Reload and restart Docker Daemons
       become: yes
       ansible.builtin.systemd:
         name: docker
         state: restarted
         daemon_reload: yes
-    - name: Create folder for docker compose
-      become: yes
-      file:
-        path: /usr/local/lib/docker/cli-plugins
-        state: directory
-    - name: Download Docker Compose container
-      become: yes
-      get_url:
-        url: https://github.com/docker/compose/releases/download/v{{ dockercompose_version }}/docker-compose-linux-{{ ansible_facts['architecture'] }}
-        dest: /usr/local/lib/docker/cli-plugins/docker-compose
-    - name: Assign permissions to Docker Compose container
-      become: yes
-      file: dest=/usr/local/lib/docker/cli-plugins/docker-compose mode=+x
-    - name: Add current user to docker group
-      become: yes
-      user:
-        name: "{{ username }}"
-        groups: docker
-        append: yes
+
     - name: Setup Visual Studio Code via Snap
       become: yes
       community.general.snap:
         name: code
         classic: yes
+
     - name: Setup Postman via Snap
       become: yes
       community.general.snap:
         name: postman
+
     - name: Download NVM shell file
       get_url:
         url: https://raw.githubusercontent.com/nvm-sh/nvm/v{{ nvm_version }}/install.sh
         dest: /home/{{ username }}/nvm.sh
         mode: a+x
+
     - name: Run NVM shell command
       script: /bin/bash /home/{{ username }}/nvm.sh
+
     - name: Remove NVM shell
       file:
         path: /home/{{ username }}/nvm.sh
