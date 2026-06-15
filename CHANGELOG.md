@@ -10,6 +10,7 @@
 + Extract PiHole configuration into dedicated playbook
 + Extract common tasks into shared task file
 + Simplify inventory file
++ Add Claude Code script
 
 ## 2.0.0
 + Remove other platforms, only AMD/Intel

@@ -1,0 +1,22 @@
+---
+- hosts: desktops
+  remote_user: "{{ username }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  tasks:
+    - name: Download Claude Code installer
+      ansible.builtin.get_url:
+        url: https://claude.ai/install.sh
+        dest: /tmp/claude_install.sh
+        mode: "0755"
+
+    - name: Install Claude Code
+      ansible.builtin.shell: /tmp/claude_install.sh
+      args:
+        executable: /bin/bash
+
+    - name: Remove Claude Code installer
+      ansible.builtin.file:
+        path: /tmp/claude_install.sh
+        state: absent
