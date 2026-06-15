@@ -1,0 +1,38 @@
+---
+- hosts: servers
+  remote_user: "{{ username }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    dockercompose_version: 5.0.0
+
+  tasks:
+    - name: Harden SSH config
+      become: yes
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        state: present
+      loop:
+        - { regexp: '^#?\s*PasswordAuthentication\s', line: 'PasswordAuthentication no' }
+        - { regexp: '^#?\s*PermitRootLogin\s', line: 'PermitRootLogin no' }
+      failed_when: false
+
+    - name: Disable auto update
+      become: yes
+      copy:
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+        content: |
+          APT::Periodic::Update-Package-Lists "0";
+          APT::Periodic::Download-Upgradeable-Packages "0";
+          APT::Periodic::AutocleanInterval "0";
+          APT::Periodic::Unattended-Upgrade "0";
+
+    - import_tasks: common.yml
+
+    - name: Install server software
+      become: yes
+      apt:
+        name:
+          - build-essential
+        state: present

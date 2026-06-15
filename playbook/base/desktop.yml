@@ -1,0 +1,84 @@
+---
+- hosts: desktops
+  remote_user: "{{ username }}"
+  vars:
+    dockercompose_version: 2.38.2
+    nvm_version: 0.40.3
+    openfortigui_version: 0.9.10-1
+  tasks:
+    - import_tasks: common.yml
+
+    - name: Install desktop software
+      become: yes
+      apt:
+        name:
+          - make
+        state: latest
+
+    - name: Install OpenFortiGUI dependency
+      become: yes
+      apt:
+        deb: http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb
+
+    - name: Install OpenFortiGUI
+      become: yes
+      apt:
+        deb: https://apt.iteas.at/iteas/pool/main/o/openfortigui/openfortigui_{{ openfortigui_version }}_amd64_focal.deb
+
+    - name: Install Google Chrome
+      become: yes
+      apt:
+        deb: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
+    - name: Create docker service directory
+      become: yes
+      file:
+        path: /etc/systemd/system/docker.service.d
+        state: directory
+
+    - name: Setup API Docker
+      become: yes
+      copy:
+        dest: /etc/systemd/system/docker.service.d/startup_options.conf
+        content: |
+          [Service]
+          ExecStart=
+          ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375
+
+    - name: Reload and restart Docker Daemons
+      become: yes
+      ansible.builtin.systemd:
+        name: docker
+        state: restarted
+        daemon_reload: yes
+
+    - name: Remove Firefox snap
+      become: yes
+      community.general.snap:
+        name: firefox
+        state: absent
+
+    - name: Setup Visual Studio Code via Snap
+      become: yes
+      community.general.snap:
+        name: code
+        classic: yes
+
+    - name: Setup Postman via Snap
+      become: yes
+      community.general.snap:
+        name: postman
+
+    - name: Download NVM shell file
+      get_url:
+        url: https://raw.githubusercontent.com/nvm-sh/nvm/v{{ nvm_version }}/install.sh
+        dest: /home/{{ username }}/nvm.sh
+        mode: a+x
+
+    - name: Run NVM shell command
+      script: /bin/bash /home/{{ username }}/nvm.sh
+
+    - name: Remove NVM shell
+      file:
+        path: /home/{{ username }}/nvm.sh
+        state: absent

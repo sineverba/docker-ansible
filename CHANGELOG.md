@@ -1,4 +1,20 @@
-# 2.0.0
+# 2.1.0
++ Upgrade dependencies
++ Add Ollama install
++ Upgrade dependencies
++ Refactor Dockerfile
++ Estratto script update
++ Refactor update script
++ Refactor desktop - server files
++ Refactor server playbook
++ Extract PiHole configuration into dedicated playbook
++ Extract common tasks into shared task file
++ Simplify inventory file
++ Add Claude Code script
++ Remove Firefox via snap
++ Update Readme
+
+## 2.0.0
 + Remove other platforms, only AMD/Intel
 
 ## 1.12.3

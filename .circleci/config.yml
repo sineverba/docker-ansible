@@ -6,7 +6,7 @@ executors:
     resource_class: medium
     environment:
       DOCKER_IMAGE: ansible
-      PYTHON_VERSION: 3.14.2
+      PYTHON_VERSION: 3.14.5
 
 jobs:
   build_amd64:
