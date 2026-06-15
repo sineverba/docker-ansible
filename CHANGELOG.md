@@ -1,4 +1,4 @@
-# Next version
+# 2.1.0
 + Upgrade dependencies
 + Add Ollama install
 + Upgrade dependencies
