@@ -42,7 +42,7 @@ docker run \
     -v $(PWD)/playbook:/playbook:ro \
     -v ~/.ssh:/ssh:ro \
     --name ansible \
-    sineverba/ansible:2.0.0 \
+    sineverba/ansible:2.1.0 \
     -i /playbook/inventory.yml \
     /playbook/base/desktop.yml \
     -e username=user \
