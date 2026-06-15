@@ -11,6 +11,7 @@
 + Extract common tasks into shared task file
 + Simplify inventory file
 + Add Claude Code script
++ Remove Firefox via snap
 
 ## 2.0.0
 + Remove other platforms, only AMD/Intel

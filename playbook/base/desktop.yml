@@ -52,6 +52,12 @@
         state: restarted
         daemon_reload: yes
 
+    - name: Remove Firefox snap
+      become: yes
+      community.general.snap:
+        name: firefox
+        state: absent
+
     - name: Setup Visual Studio Code via Snap
       become: yes
       community.general.snap:
