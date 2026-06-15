@@ -12,6 +12,7 @@
 + Simplify inventory file
 + Add Claude Code script
 + Remove Firefox via snap
++ Update Readme
 
 ## 2.0.0
 + Remove other platforms, only AMD/Intel

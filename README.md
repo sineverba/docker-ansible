@@ -11,10 +11,12 @@ Docker Ansible
 
 | Playbook | Description |
 | -------- | ----------- |
-| `desktop.yml` | Setup desktop environment |
-| `server.yml` | Setup server environment |
-| `pihole.yml` | Configure DNS for PiHole (run after `server.yml`) |
-| `test.yml` | Print system facts (for testing) |
+| `base/common.yml` | Common base setup |
+| `base/desktop.yml` | Setup desktop environment |
+| `base/server.yml` | Setup server environment |
+| `services/claude-code.yml` | Install Claude Code |
+| `services/pihole.yml` | Configure DNS for PiHole (run after `base/server.yml`) |
+| `utils/test.yml` | Print system facts (for testing) |
 
 ## Setup
 
