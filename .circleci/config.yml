@@ -2,11 +2,11 @@ version: 2.1
 executors:
   amd64_executor:
     machine:
-      image: ubuntu-2404:2025.09.1
+      image: ubuntu-2404:2026.05.1
     resource_class: medium
     environment:
       DOCKER_IMAGE: ansible
-      PYTHON_VERSION: 3.14.5
+      PYTHON_VERSION: 3.14.7
 
 jobs:
   build_amd64:

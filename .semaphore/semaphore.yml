@@ -3,7 +3,7 @@ version: v1.0
 name: Test
 agent:
   machine:
-    type: e1-standard-2
+    type: f1-standard-2
     os_image: ubuntu2404
 
 global_job_config:
@@ -14,7 +14,7 @@ global_job_config:
     - name: DOCKER_IMAGE
       value: ansible
     - name: PYTHON_VERSION
-      value: 3.14.5
+      value: 3.14.7
 
 blocks:
   - name: 'Build and test'
@@ -52,4 +52,4 @@ blocks:
               --rm 
               -it 
               --name $DOCKER_IMAGE 
-              $DOCKER_USERNAME/$DOCKER_IMAGE | grep "core 2.21.0"
+              $DOCKER_USERNAME/$DOCKER_IMAGE | grep "core 2.21.3"

@@ -1,8 +1,8 @@
 IMAGE_NAME=sineverba/ansible
 CONTAINER_NAME=ansible
 APP_VERSION=2.1.0
-PYTHON_VERSION=3.14.5
-PIP_VERSION=26.1.2
+PYTHON_VERSION=3.14.7
+PIP_VERSION=26.2.1
 
 build: 
 	docker build \
@@ -57,7 +57,7 @@ test:
 	docker run --rm -it \
 		--name $(CONTAINER_NAME) \
 		$(IMAGE_NAME):$(APP_VERSION) \
-		| grep "core 2.21.0"
+		| grep "core 2.21.3"
 
 playtest:
 	docker run \

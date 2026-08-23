@@ -2,8 +2,8 @@
 - hosts: desktops
   remote_user: "{{ username }}"
   vars:
-    dockercompose_version: 2.38.2
-    nvm_version: 0.40.3
+    dockercompose_version: 5.5.0
+    nvm_version: 0.40.7
     openfortigui_version: 0.9.10-1
   tasks:
     - import_tasks: common.yml
