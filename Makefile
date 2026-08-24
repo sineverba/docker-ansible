@@ -3,6 +3,8 @@ CONTAINER_NAME=ansible
 APP_VERSION=2.1.0
 PYTHON_VERSION=3.14.7
 PIP_VERSION=26.2.1
+username?=user
+ansible_become_pass?=password
 
 build: 
 	docker build \
@@ -68,8 +70,8 @@ playtest:
 	$(IMAGE_NAME):$(APP_VERSION) \
 	-i /playbook/inventory.yml \
 	/playbook/utils/test.yml \
-	-e username=user \
-	-e ansible_become_pass=password
+	-e username=$(username) \
+	-e ansible_become_pass=$(ansible_become_pass)
 
 desktop:
 	docker run \
@@ -81,8 +83,8 @@ desktop:
 	--skip-tags "virtualbox" \
 	-i /playbook/inventory.yml \
 	/playbook/base/desktop.yml \
-	-e username=user \
-	-e ansible_become_pass=password
+	-e username=$(username) \
+	-e ansible_become_pass=$(ansible_become_pass)
 
 server:
 	docker run \
@@ -93,8 +95,8 @@ server:
 	$(IMAGE_NAME):$(APP_VERSION) \
 	-i /playbook/inventory.yml \
 	/playbook/base/server.yml \
-	-e username=user \
-	-e ansible_become_pass=password
+	-e username=$(username) \
+	-e ansible_become_pass=$(ansible_become_pass)
 
 pihole:
 	docker run \
@@ -105,5 +107,17 @@ pihole:
 	$(IMAGE_NAME):$(APP_VERSION) \
 	-i /playbook/inventory.yml \
 	/playbook/services/pihole.yml \
-	-e username=user \
-	-e ansible_become_pass=password
+	-e username=$(username) \
+	-e ansible_become_pass=$(ansible_become_pass)
+
+server-wifi:
+	docker run \
+	--rm -it \
+	-v $(PWD)/playbook:/playbook:ro \
+	-v ~/.ssh:/ssh:ro \
+	--name $(CONTAINER_NAME) \
+	$(IMAGE_NAME):$(APP_VERSION) \
+	-i /playbook/inventory.yml \
+	/playbook/services/server-wifi.yml \
+	-e username=$(username) \
+	-e ansible_become_pass=$(ansible_become_pass)

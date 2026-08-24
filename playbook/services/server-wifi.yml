@@ -1,0 +1,54 @@
+---
+- hosts: servers
+  remote_user: "{{ username }}"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  tasks:
+    - name: Detect wired ethernet interfaces without carrier
+      become: yes
+      ansible.builtin.shell: |
+        set -euo pipefail
+        for path in /sys/class/net/*; do
+          iface=$(basename "$path")
+          [ "$iface" = "lo" ] && continue
+          [ -e "$path/wireless" ] && continue
+          [ -e "$path/bridge" ] && continue
+          [ -e "$path/bonding" ] && continue
+          [ "$(cat "$path/type" 2>/dev/null)" = "1" ] || continue
+          [ "$(cat "$path/carrier" 2>/dev/null)" = "0" ] || continue
+          echo "$iface"
+        done
+      args:
+        executable: /bin/bash
+      register: wired_no_carrier
+      changed_when: false
+
+    - name: No carrier-less wired interfaces found
+      debug:
+        msg: "No wired interface without carrier on this host, nothing to change"
+      when: wired_no_carrier.stdout_lines | length == 0
+
+    - name: Locate netplan config files
+      become: yes
+      ansible.builtin.find:
+        paths: /etc/netplan
+        patterns: "*.yaml,*.yml"
+      register: netplan_files
+      when: wired_no_carrier.stdout_lines | length > 0
+
+    - name: Mark carrier-less wired interfaces as optional in netplan
+      become: yes
+      ansible.builtin.script:
+        cmd: >-
+          files/set_netplan_optional.py
+          {{ wired_no_carrier.stdout_lines | join(',') }}
+          {{ netplan_files.files | map(attribute='path') | join(' ') }}
+      register: netplan_edit
+      when: wired_no_carrier.stdout_lines | length > 0
+      changed_when: "'changed:' in netplan_edit.stdout"
+
+    - name: Apply netplan configuration
+      become: yes
+      ansible.builtin.command: netplan apply
+      when: netplan_edit is changed

@@ -1,5 +1,7 @@
 # Next Version
 + Upgrade dependencies
++ Document sudo-rs issue on Ubuntu 24.04+
++ Add playbook for a server with wifi and no carried eth
 
 ## 2.1.0
 + Upgrade dependencies
